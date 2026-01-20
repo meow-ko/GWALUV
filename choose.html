@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>GWALUV</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    /* Mobile-first responsive design - Consistent with welcome page */
+    * {
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins';
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      text-align: center;
+      color: black;
+      position: relative;
+      overflow-x: hidden;
+      background: #f8c6d6;
+      transition: background-color 0.3s ease;
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    body.blue-mode {
+      background: #c6e2f8;
+    }
+
+    /* Mobile-safe menu icon */
+    .menu-icon {
+      position: fixed;
+      top: max(20px, env(safe-area-inset-top));
+      right: 20px;
+      font-size: 20px;
+      cursor: pointer;
+      z-index: 1000;
+      color: #ff1493;
+      background: rgba(255, 255, 255, 0.95);
+      border: 3px solid black;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 0 3px black, 4px 4px 0 black;
+      transition: transform 0.2s, box-shadow 0.2s;
+      border-radius: 0;
+      -webkit-touch-callout: none;
+      user-select: none;
+    }
+
+    body.blue-mode .menu-icon {
+      color: #4a8cff;
+    }
+
+    .menu-icon:active {
+      transform: translateY(2px);
+      box-shadow: 0 0 0 3px black, 2px 2px 0 black;
+    }
+
+    /* Change menu icon to X when sidebar is open - Mobile optimized */
+    .sidebar-open .menu-icon i {
+      display: none;
+    }
+    
+    .sidebar-open .menu-icon::after {
+      content: "X";
+      font-family: 'Poppins';
+      font-size: 18px;
+    }
+
+    /* Sidebar - Mobile optimized */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 85%;
+      max-width: 320px;
+      height: 100vh;
+      background: rgba(255, 255, 255, 0.98);
+      border-left: 4px solid black;
+      box-shadow: -4px 0 0 4px black, -8px 0 0 8px rgba(0,0,0,0.2);
+      z-index: 999;
+      padding: 20px;
+      padding-top: max(30px, env(safe-area-inset-top));
+      transition: right 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .sidebar.open {
+      right: 0;
+    }
+
+    .sidebar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 15px;
+      border-bottom: 3px solid black;
+    }
+
+    .sidebar-title {
+      font-size: 14px;
+      color: #ff1493;
+      text-shadow: 1px 1px 0px #000;
+    }
+
+    body.blue-mode .sidebar-title {
+      color: #4a8cff;
+    }
+
+    .close-btn {
+      background: pink;
+      border: 3px solid black;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 0 0 3px black, 2px 2px 0 black;
+      transition: transform 0.2s, box-shadow 0.2s;
+      -webkit-touch-callout: none;
+      user-select: none;
+    }
+
+    body.blue-mode .close-btn {
+      background: #a0d2ff;
+    }
+
+    .close-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 0 0 3px black, 1px 1px 0 black;
+    }
+
+    .sidebar-menu {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar-menu li {
+      margin-bottom: 15px;
+    }
+
+    .sidebar-menu a {
+      display: block;
+      padding: 14px 15px;
+      background: white;
+      border: 3px solid black;
+      text-decoration: none;
+      color: black;
+      box-shadow: 0 0 0 3px black, 3px 3px 0 black;
+      transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
+      font-size: 11px;
+      -webkit-touch-callout: none;
+      user-select: none;
+    }
+
+    .sidebar-menu a:active {
+      transform: translateY(2px);
+      box-shadow: 0 0 0 3px black, 1px 1px 0 black;
+    }
+
+    .sidebar-menu a:hover,
+    .sidebar-menu a.active {
+      background: pink;
+      color: white;
+    }
+
+    body.blue-mode .sidebar-menu a:hover,
+    body.blue-mode .sidebar-menu a.active {
+      background: #a0d2ff;
+      color: white;
+    }
+
+    .mode-switcher {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 3px solid black;
+    }
+
+    .mode-title {
+      font-size: 14px;
+      color: #ff1493;
+      text-shadow: 1px 1px 0px #000;
+      margin-bottom: 15px;
+    }
+
+    body.blue-mode .mode-title {
+      color: #4a8cff;
+    }
+
+    .mode-btn {
+      display: block;
+      width: 100%;
+      padding: 14px 15px;
+      background: pink;
+      border: 3px solid black;
+      font-family: 'Poppins';
+      cursor: pointer;
+      box-shadow: 0 0 0 3px black, 3px 3px 0 black;
+      transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
+      margin-bottom: 12px;
+      color: white;
+      font-size: 11px;
+      -webkit-touch-callout: none;
+      user-select: none;
+    }
+
+    .mode-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 0 0 3px black, 1px 1px 0 black;
+    }
+
+    .blue-mode-btn {
+      background: #a0d2ff;
+      color: white;
+    }
+
+    /* Overlay for mobile */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 998;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease;
+    }
+
+    .overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Mobile-optimized Glowing Heart Background */
+    .heart-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: radial-gradient(circle at center, 
+                  rgba(255, 255, 255, 0.9) 10%, 
+                  rgba(255, 105, 180, 0.6) 30%, 
+                  rgba(255, 105, 180, 0.4) 50%, 
+                  rgba(255, 192, 203, 0.2) 70%, 
+                  rgba(255, 182, 193, 0.1) 90%);
+      z-index: -2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    body.blue-mode .heart-background {
+      background: radial-gradient(circle at center, 
+                  rgba(255, 255, 255, 0.9) 10%, 
+                  rgba(100, 180, 255, 0.6) 30%, 
+                  rgba(100, 180, 255, 0.4) 50%, 
+                  rgba(173, 216, 230, 0.2) 70%, 
+                  rgba(173, 216, 230, 0.1) 90%);
+    }
+
+    .heart {
+      position: absolute;
+      width: 220px;
+      height: 200px;
+      background: radial-gradient(circle at center, white 20%, pink 70%, hotpink 100%);
+      clip-path: path("M 100 30 C 100 0, 0 0, 0 60 C 0 100, 100 180, 100 180 C 100 180, 200 100, 200 60 C 200 0, 100 0, 100 30 Z");
+      filter: blur(12px);
+      animation: pulse 3s infinite ease-in-out;
+    }
+
+    body.blue-mode .heart {
+      background: radial-gradient(circle at center, white 20%, #a0d2ff 70%, #4a8cff 100%);
+    }
+
+    .heart::before {
+      content: "";
+      position: absolute;
+      inset: -50px;
+      background: radial-gradient(circle at center, white 10%, pink 40%, hotpink 80%, transparent 100%);
+      clip-path: inherit;
+      z-index: -1;
+      filter: blur(25px);
+    }
+
+    body.blue-mode .heart::before {
+      background: radial-gradient(circle at center, white 10%, #a0d2ff 40%, #4a8cff 80%, transparent 100%);
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.2); opacity: 1; }
+    }
+
+    /* Choose Level Container */
+    .level-container {
+      width: 90%;
+      max-width: 500px;
+      padding: 30px 20px;
+      margin-top: 80px;
+      margin-bottom: 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .page-title {
+      font-size: 20px;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2);
+      opacity: 0;
+      animation: fadeInUp 1s ease forwards;
+      animation-delay: 0.3s;
+      line-height: 1.4;
+    }
+
+    .page-subtitle {
+      font-size: 16px;
+      margin-bottom: 40px;
+      color: #333;
+      opacity: 0;
+      animation: fadeInUp 1s ease forwards;
+      animation-delay: 0.6s;
+      line-height: 1.5;
+      padding: 0 10px;
+    }
+
+    /* Level Selection Cards */
+    .level-selection {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      width: 100%;
+      max-width: 400px;
+      margin-bottom: 40px;
+    }
+
+    .level-card {
+      background: rgba(255, 255, 255, 0.95);
+      border: 4px solid black;
+      padding: 25px 20px;
+      box-shadow: 0 0 0 4px black, 6px 6px 0 black;
+      transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      -webkit-touch-callout: none;
+      user-select: none;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .level-card.selected {
+      background: pink;
+      transform: translateY(2px);
+      box-shadow: 0 0 0 4px black, 3px 3px 0 black;
+    }
+
+    body.blue-mode .level-card.selected {
+      background: #a0d2ff;
+    }
+
+    .level-card:active {
+      transform: translateY(4px);
+      box-shadow: 0 0 0 4px black, 2px 2px 0 black;
+    }
+
+    .level-icon {
+      font-size: 48px;
+      margin-bottom: 15px;
+      color: #ff1493;
+      transition: transform 0.3s;
+    }
+
+    body.blue-mode .level-icon {
+      color: #4a8cff;
+    }
+
+    .level-card.selected .level-icon {
+      transform: scale(1.1);
+    }
+
+    .level-name {
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #333;
+    }
+
+    .level-card.selected .level-name {
+      color: white;
+    }
+
+    .level-description {
+      font-size: 12px;
+      color: #666;
+      line-height: 1.5;
+      max-width: 300px;
+    }
+
+    .level-card.selected .level-description {
+      color: white;
+    }
+
+    .selected-badge {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: #ff1493;
+      color: white;
+      font-size: 10px;
+      padding: 4px 8px;
+      border: 2px solid white;
+      border-radius: 10px;
+      display: none;
+    }
+
+    body.blue-mode .selected-badge {
+      background: #4a8cff;
+    }
+
+    .level-card.selected .selected-badge {
+      display: block;
+    }
+
+    /* Button Container - UPDATED TO HORIZONTAL LAYOUT */
+    .button-container {
+      display: flex;
+      flex-direction: row;
+      gap: 15px;
+      width: 100%;
+      max-width: 400px;
+      margin-top: 20px;
+    }
+
+    .action-btn {
+      padding: 18px 20px;
+      font-family: 'Poppins';
+      cursor: pointer;
+      font-size: 16px;
+      border: 4px solid black;
+      transition: transform 0.2s, box-shadow 0.2s;
+      -webkit-touch-callout: none;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .back-btn {
+      background: white;
+      color: #333;
+      box-shadow: 0 0 0 4px black, 4px 4px 0 black;
+    }
+
+    .back-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 0 0 4px black, 2px 2px 0 black;
+    }
+
+    .start-btn {
+      background: pink;
+      color: white;
+      box-shadow: 0 0 0 4px black, 6px 6px 0 black;
+    }
+
+    body.blue-mode .start-btn {
+      background: #a0d2ff;
+    }
+
+    .start-btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 0 0 4px black, 2px 2px 0 black;
+    }
+
+    .start-btn.disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .start-btn.disabled:active {
+      transform: none;
+      box-shadow: 0 0 0 4px black, 6px 6px 0 black;
+    }
+
+    /* Info Section */
+    .info-section {
+      background: rgba(255, 255, 255, 0.9);
+      border: 3px solid black;
+      padding: 20px;
+      margin-top: 30px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 0 0 3px black, 4px 4px 0 black;
+    }
+
+    .info-title {
+      font-size: 14px;
+      color: #ff1493;
+      margin-bottom: 10px;
+      text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.2);
+    }
+
+    body.blue-mode .info-title {
+      color: #4a8cff;
+    }
+
+    .info-text {
+      font-size: 11px;
+      line-height: 1.6;
+      color: #333;
+    }
+
+    /* Mobile Footer */
+    .mobile-footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      border-top: 4px solid black;
+      padding: 15px;
+      z-index: 100;
+      box-shadow: 0 -4px 0 4px black, 0 -8px 0 8px rgba(0,0,0,0.1);
+      padding-bottom: max(15px, env(safe-area-inset-bottom));
+    }
+
+    .footer-text {
+      font-size: 10px;
+      color: #333;
+      margin: 0;
+    }
+
+    /* Animation keyframes */
+    @keyframes fadeInUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes pulseHeart {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    /* Particle Layer - Mobile optimized */
+    canvas#particleCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 350px) {
+      .page-title {
+        font-size: 18px;
+      }
+      
+      .page-subtitle {
+        font-size: 14px;
+      }
+      
+      .level-icon {
+        font-size: 40px;
+      }
+      
+      .level-name {
+        font-size: 20px;
+      }
+      
+      .action-btn {
+        padding: 16px 15px;
+        font-size: 14px;
+        gap: 6px;
+      }
+      
+      .button-container {
+        gap: 10px;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .action-btn {
+        padding: 16px 12px;
+        font-size: 14px;
+        gap: 5px;
+      }
+      
+      .back-btn span,
+      .start-btn span {
+        display: none;
+      }
+      
+      .back-btn i,
+      .start-btn i {
+        margin: 0;
+        font-size: 16px;
+      }
+    }
+
+    @media (min-width: 401px) and (max-width: 480px) {
+      .action-btn {
+        padding: 18px 15px;
+        font-size: 15px;
+      }
+    }
+
+    @media (orientation: landscape) and (max-height: 500px) {
+      .level-container {
+        margin-top: 60px;
+        margin-bottom: 70px;
+      }
+      
+      .level-selection {
+        flex-direction: row;
+        justify-content: center;
+      }
+      
+      .level-card {
+        width: 45%;
+      }
+      
+      .button-container {
+        margin-top: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Menu Icon -->
+  <div class="menu-icon">
+    <i class="fas fa-bars"></i>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-title">MENU</div>
+      <div class="close-btn">
+        <i class="fas fa-times"></i>
+      </div>
+    </div>
+    <ul class="sidebar-menu">
+      <li><a href="welcome.html">Home</a></li>
+      <li><a href="choose.html" class="active">Choose Level</a></li>
+      <li><a href="setting.html">Settings</a></li>
+    </ul>
+    <div class="mode-switcher">
+      <div class="mode-title">THEME</div>
+      <button class="mode-btn pink-mode-btn">Pink Mode</button>
+      <button class="mode-btn blue-mode-btn">Blue Mode</button>
+    </div>
+  </div>
+
+  <!-- Overlay -->
+  <div class="overlay"></div>
+
+  <!-- Heart Glow Background -->
+  <div class="heart-background">
+    <div class="heart"></div>
+  </div>
+
+  <!-- Particle Effect Canvas -->
+  <canvas id="particleCanvas"></canvas>
+
+  <!-- Choose Level Content -->
+  <div class="level-container">
+    <div class="page-title">SELECT YOUR LEVEL</div>
+    <div class="page-subtitle">Choose between High School or College to customize your GWA calculation</div>
+    
+    <!-- Level Selection Cards -->
+    <div class="level-selection">
+      <div class="level-card" id="highschool-card" data-level="highschool">
+        <div class="level-icon">
+          <i class="fas fa-graduation-cap"></i>
+        </div>
+        <div class="level-name">HIGH SCHOOL</div>
+        <div class="level-description">
+          Perfect for junior and senior high school students. Calculates your average grade based on your subjects.
+        </div>
+        <div class="selected-badge">SELECTED</div>
+      </div>
+      
+      <div class="level-card" id="college-card" data-level="college">
+        <div class="level-icon">
+          <i class="fas fa-university"></i>
+        </div>
+        <div class="level-name">COLLEGE</div>
+        <div class="level-description">
+          For college/university students. Calculates your General Weighted Average (GWA) with units/credits.
+        </div>
+        <div class="selected-badge">SELECTED</div>
+      </div>
+    </div>
+    
+    <!-- Information Section -->
+    <div class="info-section">
+      <div class="info-title">WHAT'S THE DIFFERENCE?</div>
+      <div class="info-text">
+        <strong>High School:</strong> Uses simple average calculation across all subjects equally.<br>
+        <strong>College:</strong> Uses weighted average based on units/credits for each subject.
+      </div>
+    </div>
+    
+    <!-- Button Container - UPDATED FOR HORIZONTAL LAYOUT -->
+    <div class="button-container">
+      <button class="action-btn back-btn" id="back-button">
+        <i class="fas fa-arrow-left"></i> <span>BACK</span>
+      </button>
+      
+      <button class="action-btn start-btn disabled" id="start-calculator">
+        <span>START CALCULATOR</span> <i class="fas fa-calculator"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Footer -->
+  <div class="mobile-footer">
+    <p class="footer-text">© 2023 GWALUV | Made with <i class="fas fa-heart" style="color: #ff1493;"></i> for students</p>
+  </div>
+
+  <script>
+    // Load theme from localStorage
+    document.addEventListener('DOMContentLoaded', function() {
+      // Check for saved theme
+      const savedTheme = localStorage.getItem('gwaluv-theme');
+      if (savedTheme === 'blue') {
+        document.body.classList.add('blue-mode');
+      }
+      
+      // Set initial selection (none)
+      updateStartButton();
+    });
+
+    // Sidebar functionality
+    const menuIcon = document.querySelector('.menu-icon');
+    const sidebar = document.querySelector('.sidebar');
+    const closeBtn = document.querySelector('.close-btn');
+    const overlay = document.querySelector('.overlay');
+    const pinkModeBtn = document.querySelector('.pink-mode-btn');
+    const blueModeBtn = document.querySelector('.blue-mode-btn');
+    const body = document.body;
+    const menuItems = document.querySelectorAll('.sidebar-menu a');
+    const backButton = document.getElementById('back-button');
+    const startButton = document.getElementById('start-calculator');
+    const highSchoolCard = document.getElementById('highschool-card');
+    const collegeCard = document.getElementById('college-card');
+
+    let selectedLevel = null;
+
+    // Function to close sidebar
+    function closeSidebar() {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('active');
+      body.classList.remove('sidebar-open');
+    }
+
+    // Function to open sidebar
+    function openSidebar() {
+      sidebar.classList.add('open');
+      overlay.classList.add('active');
+      body.classList.add('sidebar-open');
+    }
+
+    // Mobile touch events for menu
+    menuIcon.addEventListener('click', function(e) {
+      e.preventDefault();
+      if (sidebar.classList.contains('open')) {
+        closeSidebar();
+      } else {
+        openSidebar();
+      }
+    });
+
+    closeBtn.addEventListener('click', closeSidebar);
+    overlay.addEventListener('click', closeSidebar);
+
+    // Menu item click functionality
+    menuItems.forEach(item => {
+      item.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        // Remove active class from all items
+        menuItems.forEach(i => i.classList.remove('active'));
+        
+        // Add active class to clicked item
+        this.classList.add('active');
+        
+        // Close sidebar after clicking
+        setTimeout(() => {
+          closeSidebar();
+          
+          // Get page name from link text
+          const pageName = this.textContent;
+          if (pageName === 'Home') {
+            window.location.href = 'welcome.html';
+          } else if (pageName !== 'Choose Level') {
+            alert(`Opening ${pageName}...`);
+          }
+        }, 300);
+      });
+    });
+
+    // Mode switching with localStorage
+    pinkModeBtn.addEventListener('click', function() {
+      body.classList.remove('blue-mode');
+      localStorage.setItem('gwaluv-theme', 'pink');
+      
+      // Update mode buttons
+      pinkModeBtn.style.background = 'pink';
+      blueModeBtn.style.background = '#a0d2ff';
+      
+      // Update heart colors
+      document.querySelectorAll('.level-icon, .info-title').forEach(icon => {
+        icon.style.color = '#ff1493';
+      });
+    });
+
+    blueModeBtn.addEventListener('click', function() {
+      body.classList.add('blue-mode');
+      localStorage.setItem('gwaluv-theme', 'blue');
+      
+      // Update mode buttons
+      pinkModeBtn.style.background = 'pink';
+      blueModeBtn.style.background = '#a0d2ff';
+      
+      // Update heart colors
+      document.querySelectorAll('.level-icon, .info-title').forEach(icon => {
+        icon.style.color = '#4a8cff';
+      });
+    });
+
+    // Level selection functionality
+    function selectLevel(level) {
+      // Remove selected class from both cards
+      highSchoolCard.classList.remove('selected');
+      collegeCard.classList.remove('selected');
+      
+      // Add selected class to clicked card
+      if (level === 'highschool') {
+        highSchoolCard.classList.add('selected');
+        selectedLevel = 'highschool';
+      } else if (level === 'college') {
+        collegeCard.classList.add('selected');
+        selectedLevel = 'college';
+      }
+      
+      // Update start button
+      updateStartButton();
+    }
+
+    // Update start button state
+    function updateStartButton() {
+      if (selectedLevel) {
+        startButton.classList.remove('disabled');
+        startButton.innerHTML = `<span>START ${selectedLevel.toUpperCase()} CALCULATOR</span> <i class="fas fa-calculator"></i>`;
+      } else {
+        startButton.classList.add('disabled');
+        startButton.innerHTML = '<span>SELECT A LEVEL FIRST</span> <i class="fas fa-exclamation-circle"></i>';
+      }
+    }
+
+    // Card click events
+    highSchoolCard.addEventListener('click', function() {
+      selectLevel('highschool');
+      createParticleEffect(this);
+    });
+
+    collegeCard.addEventListener('click', function() {
+      selectLevel('college');
+      createParticleEffect(this);
+    });
+
+    // Create particle effect on card selection
+    function createParticleEffect(card) {
+      const rect = card.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      
+      for (let i = 0; i < 15; i++) {
+        setTimeout(() => {
+          createParticle(centerX, centerY);
+        }, i * 30);
+      }
+    }
+
+    // Back button functionality
+    backButton.addEventListener('click', function() {
+      // Add click animation
+      this.style.transform = 'translateY(2px)';
+      this.style.boxShadow = '0 0 0 4px black, 2px 2px 0 black';
+      
+      setTimeout(() => {
+        this.style.transform = '';
+        this.style.boxShadow = '';
+        
+        // Go back to welcome page
+        window.location.href = 'welcome.html';
+      }, 200);
+    });
+
+   // Start button event listener
+startButton.addEventListener('click', function() {
+  if (this.classList.contains('disabled')) {
+    // Shake animation for disabled button
+    this.style.transform = 'translateX(10px)';
+    setTimeout(() => {
+      this.style.transform = 'translateX(-10px)';
+      setTimeout(() => {
+        this.style.transform = '';
+      }, 100);
+    }, 100);
+    return;
+  }
+  
+  // Add click animation
+  this.style.transform = 'translateY(4px)';
+  this.style.boxShadow = '0 0 0 4px black, 2px 2px 0 black';
+  
+  setTimeout(() => {
+    this.style.transform = '';
+    this.style.boxShadow = '';
+    
+    // Save selected level to localStorage
+    localStorage.setItem('gwaluv-level', selectedLevel);
+    
+    // Navigate to the correct calculator page
+    if (selectedLevel === 'highschool') {
+      window.location.href = 'calculator-highschool.html';
+    } else if (selectedLevel === 'college') {
+      window.location.href = 'calculator-college.html';
+    }
+  }, 200);
+});
+
+    // Particle Effect (same as welcome page)
+    const canvas = document.getElementById("particleCanvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particles = [];
+
+    function createParticle(x, y, auto = false) {
+      const shapes = ["heart", "circle", "glitter"];
+      const shape = shapes[Math.floor(Math.random() * shapes.length)];
+      const isBlueMode = body.classList.contains('blue-mode');
+      
+      particles.push({
+        x: x,
+        y: y,
+        size: shape === "glitter" ? Math.random() * 4 + 2 : Math.random() * 12 + 8,
+        speedX: auto ? (Math.random() - 0.5) * 0.5 : (Math.random() - 0.5) * 2,
+        speedY: auto ? (Math.random() * -1 - 0.2) : (Math.random() - 1.5) * 2,
+        opacity: 1,
+        shape: shape,
+        color: shape === "heart" ? (isBlueMode ? "blue" : "pink") : (shape === "glitter" ? "white" : (isBlueMode ? "lightblue" : "hotpink"))
+      });
+    }
+
+    function drawHeart(x, y, size, color, opacity) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.scale(size / 100, size / 100);
+      ctx.beginPath();
+      ctx.moveTo(75, 40);
+      ctx.bezierCurveTo(75, 37, 70, 25, 50, 25);
+      ctx.bezierCurveTo(20, 25, 20, 62.5, 20, 62.5);
+      ctx.bezierCurveTo(20, 80, 40, 102, 75, 120);
+      ctx.bezierCurveTo(110, 102, 130, 80, 130, 62.5);
+      ctx.bezierCurveTo(130, 62.5, 130, 25, 100, 25);
+      ctx.bezierCurveTo(85, 25, 75, 37, 75, 40);
+      ctx.closePath();
+      
+      if (color === "pink") {
+        ctx.fillStyle = `rgba(255,182,193, ${opacity})`;
+      } else if (color === "blue") {
+        ctx.fillStyle = `rgba(100, 180, 255, ${opacity})`;
+      } else if (color === "lightblue") {
+        ctx.fillStyle = `rgba(173, 216, 230, ${opacity})`;
+      } else {
+        ctx.fillStyle = `rgba(255,105,180, ${opacity})`;
+      }
+      
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < particles.length; i++) {
+        let p = particles[i];
+        p.x += p.speedX;
+        p.y += p.speedY;
+        p.opacity -= 0.01;
+
+        if (p.shape === "heart") {
+          drawHeart(p.x, p.y, p.size, p.color, p.opacity);
+        } else if (p.shape === "circle") {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size / 2, 0, Math.PI * 2);
+          
+          if (p.color === "pink") {
+            ctx.fillStyle = `rgba(255,182,193, ${p.opacity})`;
+          } else if (p.color === "blue") {
+            ctx.fillStyle = `rgba(100, 180, 255, ${p.opacity})`;
+          } else if (p.color === "lightblue") {
+            ctx.fillStyle = `rgba(173, 216, 230, ${p.opacity})`;
+          } else {
+            ctx.fillStyle = `rgba(255,105,180, ${p.opacity})`;
+          }
+          
+          ctx.fill();
+        } else if (p.shape === "glitter") {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size / 2, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255,255,255,${p.opacity})`;
+          ctx.fill();
+        }
+
+        if (p.opacity <= 0) {
+          particles.splice(i, 1);
+          i--;
+        }
+      }
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    // Auto glitter sprinkle generator
+    setInterval(() => {
+      createParticle(Math.random() * canvas.width, Math.random() * canvas.height, true);
+    }, 150);
+
+    // Mobile touch events for particles
+    let touchTimer;
+    window.addEventListener("touchstart", (e) => {
+      const touch = e.touches[0];
+      for (let i = 0; i < 5; i++) {
+        createParticle(touch.clientX, touch.clientY);
+      }
+      
+      // Long touch for more particles
+      touchTimer = setTimeout(() => {
+        for (let i = 0; i < 15; i++) {
+          createParticle(touch.clientX, touch.clientY);
+        }
+      }, 500);
+    });
+
+    window.addEventListener("touchend", () => {
+      clearTimeout(touchTimer);
+    });
+
+    window.addEventListener("touchmove", (e) => {
+      const touch = e.touches[0];
+      for (let i = 0; i < 2; i++) {
+        createParticle(touch.clientX, touch.clientY);
+      }
+    });
+
+    // Mouse events for desktop
+    window.addEventListener("mousemove", (e) => {
+      for (let i = 0; i < 3; i++) {
+        createParticle(e.clientX, e.clientY);
+      }
+    });
+
+    window.addEventListener("click", (e) => {
+      for (let i = 0; i < 10; i++) {
+        createParticle(e.clientX, e.clientY);
+      }
+    });
+
+    window.addEventListener("resize", () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  </script>
+</body>
+</html>

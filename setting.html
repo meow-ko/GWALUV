@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>GWALUV - Settings</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    /* Mobile-first responsive design - Consistent with other pages */
+    * {
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins';
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      text-align: center;
+      color: black;
+      position: relative;
+      overflow-x: hidden;
+      background: #f8c6d6;
+      transition: background-color 0.3s ease;
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    body.blue-mode {
+      background: #c6e2f8;
+    }
+
+    /* Mobile-safe menu icon */
+    .menu-icon {
+      position: fixed;
+      top: max(20px, env(safe-area-inset-top));
+      right: 20px;
+      font-size: 20px;
+      cursor: pointer;
+      z-index: 1000;
+      color: #ff1493;
+      background: rgba(255, 255, 255, 0.95);
+      border: 3px solid black;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 0 3px black, 4px 4px 0 black;
+      transition: transform 0.2s, box-shadow 0.2s;
+      border-radius: 0;
+      -webkit-touch-callout: none;
+      user-select: none;
+    }
+
+    body.blue-mode .menu-icon {
+      color: #4a8cff;
+    }
+
+    .menu-icon:active {
+      transform: translateY(2px);
+      box-shadow: 0 0 0 3px black, 2px 2px 0 black;
+    }
+
+    /* Change menu icon to X when sidebar is open - Mobile optimized */
+    .sidebar-open .menu-icon i {
+      display: none;
+    }
+    
+    .sidebar-open .menu-icon::after {
+      content: "X";
+      font-family: 'Poppins';
+      font-size: 18px;
+    }
+
+    /* Sidebar - Mobile optimized */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 85%;
+      max-width: 320px;
+      height: 100vh;
+      background: rgba(255, 255, 255, 0.98);
+      border-left: 4px solid black;
+      box-shadow: -4px 0 0 4px black, -8px 0 0 8px rgba(0,0,0,0.2);
+      z-index: 999;
+      padding: 20px;
+      padding-top: max(30px, env(safe-area-inset-top));
+      transition: right 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .sidebar.open {
+      right: 0;
+    }
+
+    .sidebar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 15px;
+      border-bottom: 3px solid black;
+    }
+
+    .sidebar-title {
+      font-size: 14px;
+      color: #ff1493;
+      text-shadow: 1px 1px 0px #000;
+    }
+
+    body.blue-mode .sidebar-title {
+      color: #4a8cff;
+    }
+
+    .close-btn {
+      background: pink;
+      border: 3px solid black;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 0 0 3px black, 2px 2px 0 black;
+      transition: transform 0.2s, box-shadow 0.2s;
+      -webkit-touch-callout: none;
+      user-select: none;
+    }
+
+    body.blue-mode .close-btn {
+      background: #a0d2ff;
+    }
+
+    .close-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 0 0 3px black, 1px 1px 0 black;
+    }
+
+    .sidebar-menu {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar-menu li {
+      margin-bottom: 15px;
+    }
+
+    .sidebar-menu a {
+      display: block;
+      padding: 14px 15px;
+      background: white;
+      border: 3px solid black;
+      text-decoration: none;
+      color: black;
+      box-shadow: 0 0 0 3px black, 3px 3px 0 black;
+      transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
+      font-size: 11px;
+      -webkit-touch-callout: none;
+      user-select: none;
+    }
+
+    .sidebar-menu a:active {
+      transform: translateY(2px);
+      box-shadow: 0 0 0 3px black, 1px 1px 0 black;
+    }
+
+    .sidebar-menu a:hover,
+    .sidebar-menu a.active {
+      background: pink;
+      color: white;
+    }
+
+    body.blue-mode .sidebar-menu a:hover,
+    body.blue-mode .sidebar-menu a.active {
+      background: #a0d2ff;
+      color: white;
+    }
+
+    .mode-switcher {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 3px solid black;
+    }
+
+    .mode-title {
+      font-size: 14px;
+      color: #ff1493;
+      text-shadow: 1px 1px 0px #000;
+      margin-bottom: 15px;
+    }
+
+    body.blue-mode .mode-title {
+      color: #4a8cff;
+    }
+
+    .mode-btn {
+      display: block;
+      width: 100%;
+      padding: 14px 15px;
+      background: pink;
+      border: 3px solid black;
+      font-family: 'Poppins';
+      cursor: pointer;
+      box-shadow: 0 0 0 3px black, 3px 3px 0 black;
+      transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
+      margin-bottom: 12px;
+      color: white;
+      font-size: 11px;
+      -webkit-touch-callout: none;
+      user-select: none;
+    }
+
+    .mode-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 0 0 3px black, 1px 1px 0 black;
+    }
+
+    .blue-mode-btn {
+      background: #a0d2ff;
+      color: white;
+    }
+
+    /* Overlay for mobile */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 998;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease;
+    }
+
+    .overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Mobile-optimized Glowing Heart Background */
+    .heart-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: radial-gradient(circle at center, 
+                  rgba(255, 255, 255, 0.9) 10%, 
+                  rgba(255, 105, 180, 0.6) 30%, 
+                  rgba(255, 105, 180, 0.4) 50%, 
+                  rgba(255, 192, 203, 0.2) 70%, 
+                  rgba(255, 182, 193, 0.1) 90%);
+      z-index: -2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    body.blue-mode .heart-background {
+      background: radial-gradient(circle at center, 
+                  rgba(255, 255, 255, 0.9) 10%, 
+                  rgba(100, 180, 255, 0.6) 30%, 
+                  rgba(100, 180, 255, 0.4) 50%, 
+                  rgba(173, 216, 230, 0.2) 70%, 
+                  rgba(173, 216, 230, 0.1) 90%);
+    }
+
+    .heart {
+      position: absolute;
+      width: 220px;
+      height: 200px;
+      background: radial-gradient(circle at center, white 20%, pink 70%, hotpink 100%);
+      clip-path: path("M 100 30 C 100 0, 0 0, 0 60 C 0 100, 100 180, 100 180 C 100 180, 200 100, 200 60 C 200 0, 100 0, 100 30 Z");
+      filter: blur(12px);
+      animation: pulse 3s infinite ease-in-out;
+    }
+
+    body.blue-mode .heart {
+      background: radial-gradient(circle at center, white 20%, #a0d2ff 70%, #4a8cff 100%);
+    }
+
+    .heart::before {
+      content: "";
+      position: absolute;
+      inset: -50px;
+      background: radial-gradient(circle at center, white 10%, pink 40%, hotpink 80%, transparent 100%);
+      clip-path: inherit;
+      z-index: -1;
+      filter: blur(25px);
+    }
+
+    body.blue-mode .heart::before {
+      background: radial-gradient(circle at center, white 10%, #a0d2ff 40%, #4a8cff 80%, transparent 100%);
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.2); opacity: 1; }
+    }
+
+    /* Settings Container */
+    .settings-container {
+      width: 90%;
+      max-width: 500px;
+      padding: 30px 20px;
+      margin-top: 80px;
+      margin-bottom: 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .page-title {
+      font-size: 24px;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2);
+      opacity: 0;
+      animation: fadeInUp 1s ease forwards;
+      animation-delay: 0.3s;
+      line-height: 1.4;
+      color: #ff1493;
+    }
+
+    body.blue-mode .page-title {
+      color: #4a8cff;
+    }
+
+    .page-subtitle {
+      font-size: 14px;
+      margin-bottom: 40px;
+      color: #333;
+      opacity: 0;
+      animation: fadeInUp 1s ease forwards;
+      animation-delay: 0.6s;
+      line-height: 1.5;
+      padding: 0 10px;
+    }
+
+    /* Tabs Navigation */
+    .tabs {
+      display: flex;
+      width: 100%;
+      max-width: 400px;
+      margin-bottom: 20px;
+      border-bottom: 3px solid black;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 15px;
+      background: white;
+      border: 3px solid black;
+      border-bottom: none;
+      font-family: 'Poppins';
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      -webkit-touch-callout: none;
+      user-select: none;
+      position: relative;
+      margin-right: 5px;
+    }
+
+    .tab:last-child {
+      margin-right: 0;
+    }
+
+    .tab:active {
+      transform: translateY(2px);
+    }
+
+    .tab.active {
+      background: pink;
+      color: white;
+      transform: translateY(-2px);
+      z-index: 1;
+    }
+
+    body.blue-mode .tab.active {
+      background: #a0d2ff;
+    }
+
+    /* Tab Content */
+    .tab-content {
+      width: 100%;
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* FAQ Section */
+    .faq-section {
+      width: 100%;
+      max-width: 400px;
+      margin-bottom: 30px;
+    }
+
+    .faq-title {
+      font-size: 20px;
+      margin-bottom: 20px;
+      color: #ff1493;
+      text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.2);
+    }
+
+    body.blue-mode .faq-title {
+      color: #4a8cff;
+    }
+
+    .faq-item {
+      background: rgba(255, 255, 255, 0.95);
+      border: 3px solid black;
+      margin-bottom: 15px;
+      box-shadow: 0 0 0 3px black, 4px 4px 0 black;
+      overflow: hidden;
+      -webkit-touch-callout: none;
+      user-select: none;
+    }
+
+    .faq-question {
+      padding: 15px;
+      font-size: 14px;
+      font-weight: bold;
+      color: #333;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.3s ease;
+    }
+
+    .faq-question:hover {
+      background: rgba(255, 255, 255, 0.8);
+    }
+
+    .faq-question .icon {
+      color: #ff1493;
+      transition: transform 0.3s ease;
+    }
+
+    body.blue-mode .faq-question .icon {
+      color: #4a8cff;
+    }
+
+    .faq-item.active .faq-question .icon {
+      transform: rotate(180deg);
+    }
+
+    .faq-answer {
+      padding: 0 15px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+      font-size: 12px;
+      line-height: 1.6;
+      color: #666;
+    }
+
+    .faq-item.active .faq-answer {
+      padding: 0 15px 15px 15px;
+      max-height: 500px;
+    }
+
+    /* About Us Section */
+    .about-section {
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .about-title {
+      font-size: 20px;
+      margin-bottom: 20px;
+      color: #ff1493;
+      text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.2);
+    }
+
+    body.blue-mode .about-title {
+      color: #4a8cff;
+    }
+
+    .about-card {
+      background: rgba(255, 255, 255, 0.95);
+      border: 3px solid black;
+      padding: 25px 20px;
+      box-shadow: 0 0 0 3px black, 6px 6px 0 black;
+      margin-bottom: 30px;
+    }
+
+    .app-icon {
+      font-size: 48px;
+      color: #ff1493;
+      margin-bottom: 15px;
+    }
+
+    body.blue-mode .app-icon {
+      color: #4a8cff;
+    }
+
+    .app-name {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .app-tagline {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .about-description {
+      font-size: 11px;
+      line-height: 1.6;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .features-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.9);
+      border: 2px solid black;
+      padding: 12px 15px;
+      box-shadow: 0 0 0 2px black, 2px 2px 0 black;
+    }
+
+    .feature-icon {
+      font-size: 16px;
+      color: #ff1493;
+      margin-right: 10px;
+      min-width: 24px;
+    }
+
+    body.blue-mode .feature-icon {
+      color: #4a8cff;
+    }
+
+    .feature-text {
+      font-size: 11px;
+      line-height: 1.4;
+      color: #333;
+    }
+
+    /* Team Section - CENTERED WITH CIRCULAR PICTURE */
+    .team-section {
+      margin-top: 30px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .team-title {
+      font-size: 16px;
+      color: #ff1493;
+      margin-bottom: 15px;
+      text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.2);
+    }
+
+    body.blue-mode .team-title {
+      color: #4a8cff;
+    }
+
+    .team-grid {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      width: 100%;
+    }
+
+    .team-member {
+      background: rgba(255, 255, 255, 0.9);
+      border: 2px solid black;
+      padding: 20px;
+      box-shadow: 0 0 0 2px black, 3px 3px 0 black;
+      text-align: center;
+      width: 100%;
+      max-width: 220px;
+    }
+
+    .member-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: 3px solid black;
+      margin: 0 auto 10px;
+      overflow: hidden;
+      position: relative;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      box-shadow: 0 0 0 2px black, 2px 2px 0 rgba(0,0,0,0.1);
+    }
+
+    .member-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .avatar-fallback {
+      width: 100%;
+      height: 100%;
+      background: pink;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: white;
+    }
+
+    body.blue-mode .avatar-fallback {
+      background: #a0d2ff;
+    }
+
+    .member-name {
+      font-size: 12px;
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: #333;
+    }
+
+    .member-role {
+      font-size: 10px;
+      color: #666;
+    }
+
+    /* Contact Button */
+    .contact-btn {
+      width: 100%;
+      max-width: 400px;
+      padding: 15px;
+      background: pink;
+      color: white;
+      border: 3px solid black;
+      font-family: 'Poppins';
+      cursor: pointer;
+      font-size: 14px;
+      box-shadow: 0 0 0 3px black, 4px 4px 0 black;
+      transition: transform 0.2s, box-shadow 0.2s;
+      margin-top: 20px;
+      -webkit-touch-callout: none;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    body.blue-mode .contact-btn {
+      background: #a0d2ff;
+    }
+
+    .contact-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 0 0 3px black, 2px 2px 0 black;
+    }
+
+    /* Mobile Footer */
+    .mobile-footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      border-top: 4px solid black;
+      padding: 15px;
+      z-index: 100;
+      box-shadow: 0 -4px 0 4px black, 0 -8px 0 8px rgba(0,0,0,0.1);
+      padding-bottom: max(15px, env(safe-area-inset-bottom));
+    }
+
+    .footer-text {
+      font-size: 10px;
+      color: #333;
+      margin: 0;
+    }
+
+    /* Animation keyframes */
+    @keyframes fadeInUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Particle Layer - Mobile optimized */
+    canvas#particleCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 480px) {
+      .page-title {
+        font-size: 20px;
+      }
+      
+      .tab {
+        padding: 12px 10px;
+        font-size: 12px;
+      }
+      
+      .team-member {
+        max-width: 200px;
+        padding: 15px;
+      }
+      
+      .member-avatar {
+        width: 70px;
+        height: 70px;
+      }
+    }
+
+    @media (max-width: 350px) {
+      .page-title {
+        font-size: 18px;
+      }
+      
+      .page-subtitle {
+        font-size: 12px;
+      }
+      
+      .tab {
+        padding: 10px 8px;
+        font-size: 11px;
+      }
+      
+      .faq-question {
+        font-size: 13px;
+        padding: 12px;
+      }
+      
+      .team-member {
+        max-width: 180px;
+        padding: 12px;
+      }
+      
+      .member-avatar {
+        width: 60px;
+        height: 60px;
+      }
+    }
+
+    @media (orientation: landscape) and (max-height: 500px) {
+      .settings-container {
+        margin-top: 60px;
+        margin-bottom: 70px;
+      }
+      
+      .faq-item {
+        margin-bottom: 10px;
+      }
+      
+      .about-card {
+        padding: 20px 15px;
+      }
+      
+      .team-member {
+        max-width: 150px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Menu Icon -->
+  <div class="menu-icon">
+    <i class="fas fa-bars"></i>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-title">MENU</div>
+      <div class="close-btn">
+        <i class="fas fa-times"></i>
+      </div>
+    </div>
+    <ul class="sidebar-menu">
+      <li><a href="welcome.html">Home</a></li>
+      <li><a href="choose.html">Choose Level</a></li>
+      <li><a href="setting.html" class="active">Settings</a></li>
+    </ul>
+    <div class="mode-switcher">
+      <div class="mode-title">THEME</div>
+      <button class="mode-btn pink-mode-btn">Pink Mode</button>
+      <button class="mode-btn blue-mode-btn">Blue Mode</button>
+    </div>
+  </div>
+
+  <!-- Overlay -->
+  <div class="overlay"></div>
+
+  <!-- Heart Glow Background -->
+  <div class="heart-background">
+    <div class="heart"></div>
+  </div>
+
+  <!-- Particle Effect Canvas -->
+  <canvas id="particleCanvas"></canvas>
+
+  <!-- Settings Content -->
+  <div class="settings-container">
+    <div class="page-title">SETTINGS</div>
+    <div class="page-subtitle">Customize your experience and learn more about GWALUV</div>
+    
+    <!-- Tabs Navigation -->
+    <div class="tabs">
+      <button class="tab active" data-tab="faq">FAQ</button>
+      <button class="tab" data-tab="about">ABOUT US</button>
+    </div>
+    
+    <!-- FAQ Section -->
+    <div class="tab-content active" id="faq-tab">
+      <div class="faq-section">
+        <div class="faq-title">FREQUENTLY ASKED QUESTIONS</div>
+        
+        <div class="faq-item">
+          <div class="faq-question">
+            How do I calculate my GWA?
+            <span class="icon"><i class="fas fa-chevron-down"></i></span>
+          </div>
+          <div class="faq-answer">
+            For college: Enter your subject names, units, and grades (1.0 to 4.0), then click "CALCULATE GWA". For high school: Enter subject names and grades (0-100), then click "CALCULATE".
+          </div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-question">
+            What's the difference between High School and College mode?
+            <span class="icon"><i class="fas fa-chevron-down"></i></span>
+          </div>
+          <div class="faq-answer">
+            High School mode calculates simple average of grades (0-100). College mode calculates weighted average (GWA) based on units/credits with grades from 1.0 (highest) to 4.0 (lowest).
+          </div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-question">
+            Can I save my calculations?
+            <span class="icon"><i class="fas fa-chevron-down"></i></span>
+          </div>
+          <div class="faq-answer">
+            Yes! In College mode, after calculating your GWA, a "DOWNLOAD PDF" button appears. Click it to generate and save a beautifully formatted PDF report of your grades.
+          </div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-question">
+            How do I add more subjects?
+            <span class="icon"><i class="fas fa-chevron-down"></i></span>
+          </div>
+          <div class="faq-answer">
+            Click the "ADD ANOTHER SUBJECT" button to add more subject rows. You can add as many as you need. To remove a subject, click the red X button next to it.
+          </div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-question">
+            Can I change the theme?
+            <span class="icon"><i class="fas fa-chevron-down"></i></span>
+          </div>
+          <div class="faq-answer">
+            Yes! Open the menu and select your preferred theme: Pink Mode or Blue Mode. Your choice will be saved automatically.
+          </div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-question">
+            Is my data saved locally?
+            <span class="icon"><i class="fas fa-chevron-down"></i></span>
+          </div>
+          <div class="faq-answer">
+            Yes, your theme preference is saved in your browser's local storage. However, your grade calculations are not automatically saved - you should use the PDF download feature to save your results.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- About Us Section -->
+    <div class="tab-content" id="about-tab">
+      <div class="about-section">
+        <div class="about-title">ABOUT GWALUV</div>
+        
+        <div class="about-card">
+          <div class="app-icon">
+            <i class="fas fa-heart"></i>
+          </div>
+          <div class="app-name">GWALUV</div>
+          <div class="app-tagline">Grade Calculator with Heart ❤️</div>
+          
+          <div class="about-description">
+            GWALUV is a student-friendly grade calculator designed to make tracking academic performance easy, fun, and visually appealing. Whether you're in high school or college, GWALUV helps you calculate your grades accurately with a beautiful, mobile-optimized interface.
+          </div>
+          
+          <div class="features-list">
+            <div class="feature-item">
+              <div class="feature-icon"><i class="fas fa-heart"></i></div>
+              <div class="feature-text">Beautiful heart-themed designs with pink & blue modes</div>
+            </div>
+            
+            <div class="feature-item">
+              <div class="feature-icon"><i class="fas fa-mobile-alt"></i></div>
+              <div class="feature-text">Fully responsive mobile-first design</div>
+            </div>
+            
+            <div class="feature-item">
+              <div class="feature-icon"><i class="fas fa-graduation-cap"></i></div>
+              <div class="feature-text">Support for both High School and College students</div>
+            </div>
+            
+            <div class="feature-item">
+              <div class="feature-icon"><i class="fas fa-file-pdf"></i></div>
+              <div class="feature-text">PDF download feature for saving your grade reports</div>
+            </div>
+            
+            <div class="feature-item">
+              <div class="feature-icon"><i class="fas fa-sparkles"></i></div>
+              <div class="feature-text">Interactive particle effects and animations</div>
+            </div>
+          </div>
+          
+          <div class="team-section">
+            <div class="team-title">MEET THE TEAM</div>
+            
+            <div class="team-grid">
+              <div class="team-member">
+                <div class="member-avatar">
+                  <!-- Replace with your image URL -->
+                  <img src="me.png" 
+                       alt="Jomaica Ecal - Developer"
+                       onerror="this.onerror=null; this.style.display='none'; this.parentNode.innerHTML='<div class=\"avatar-fallback\"><i class=\"fas fa-user\"></i></div>'">
+                </div>
+                <div class="member-name">JOMAICA ECAL</div>
+                <div class="member-role">Developer</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <button class="contact-btn" id="contact-btn">
+          <i class="fas fa-envelope"></i> CONTACT US
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Footer -->
+  <div class="mobile-footer">
+    <p class="footer-text">© 2023 GWALUV | Made with <i class="fas fa-heart" style="color: #ff1493;"></i> for students</p>
+  </div>
+
+  <script>
+    // Load theme from localStorage
+    document.addEventListener('DOMContentLoaded', function() {
+      // Check for saved theme
+      const savedTheme = localStorage.getItem('gwaluv-theme');
+      if (savedTheme === 'blue') {
+        document.body.classList.add('blue-mode');
+        updateModeButtons();
+        updateHeartColors();
+      }
+      
+      // Initialize FAQ functionality
+      initFAQ();
+      
+      // Initialize tabs
+      initTabs();
+      
+      // Check URL hash for direct navigation
+      checkUrlHash();
+    });
+
+    // Sidebar functionality
+    const menuIcon = document.querySelector('.menu-icon');
+    const sidebar = document.querySelector('.sidebar');
+    const closeBtn = document.querySelector('.close-btn');
+    const overlay = document.querySelector('.overlay');
+    const pinkModeBtn = document.querySelector('.pink-mode-btn');
+    const blueModeBtn = document.querySelector('.blue-mode-btn');
+    const body = document.body;
+    const menuItems = document.querySelectorAll('.sidebar-menu a');
+    const contactBtn = document.getElementById('contact-btn');
+
+    // Function to close sidebar
+    function closeSidebar() {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('active');
+      body.classList.remove('sidebar-open');
+    }
+
+    // Function to open sidebar
+    function openSidebar() {
+      sidebar.classList.add('open');
+      overlay.classList.add('active');
+      body.classList.add('sidebar-open');
+    }
+
+    // Mobile touch events for menu
+    menuIcon.addEventListener('click', function(e) {
+      e.preventDefault();
+      if (sidebar.classList.contains('open')) {
+        closeSidebar();
+      } else {
+        openSidebar();
+      }
+    });
+
+    closeBtn.addEventListener('click', closeSidebar);
+    overlay.addEventListener('click', closeSidebar);
+
+    // Menu item click functionality
+    menuItems.forEach(item => {
+      item.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        // Remove active class from all items
+        menuItems.forEach(i => i.classList.remove('active'));
+        
+        // Add active class to clicked item
+        this.classList.add('active');
+        
+        // Close sidebar after clicking
+        setTimeout(() => {
+          closeSidebar();
+          
+          // Get page name from link text or href
+          const pageName = this.textContent;
+          const href = this.getAttribute('href');
+          
+          if (href === 'welcome.html') {
+            window.location.href = 'welcome.html';
+          } else if (href === 'choose.html') {
+            window.location.href = 'choose.html';
+          } else if (href === '#faq-section') {
+            // Switch to FAQ tab
+            switchTab('faq');
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          } else if (href === '#about-section') {
+            // Switch to About tab
+            switchTab('about');
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          } else if (href === '#') {
+            // Already on settings page
+          }
+        }, 300);
+      });
+    });
+
+    // Mode switching with localStorage
+    pinkModeBtn.addEventListener('click', function() {
+      body.classList.remove('blue-mode');
+      localStorage.setItem('gwaluv-theme', 'pink');
+      updateModeButtons();
+      updateHeartColors();
+    });
+
+    blueModeBtn.addEventListener('click', function() {
+      body.classList.add('blue-mode');
+      localStorage.setItem('gwaluv-theme', 'blue');
+      updateModeButtons();
+      updateHeartColors();
+    });
+
+    function updateModeButtons() {
+      const isBlueMode = body.classList.contains('blue-mode');
+      pinkModeBtn.style.background = isBlueMode ? 'pink' : '#ff69b4';
+      blueModeBtn.style.background = isBlueMode ? '#4a8cff' : '#a0d2ff';
+    }
+
+    function updateHeartColors() {
+      const isBlueMode = body.classList.contains('blue-mode');
+      const color = isBlueMode ? '#4a8cff' : '#ff1493';
+      
+      // Update all colored elements
+      document.querySelectorAll('.page-title, .faq-title, .about-title, .team-title, .faq-question .icon, .app-icon').forEach(el => {
+        el.style.color = color;
+      });
+    }
+
+    // FAQ functionality
+    function initFAQ() {
+      const faqItems = document.querySelectorAll('.faq-item');
+      
+      faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+        
+        question.addEventListener('click', function() {
+          // Close other FAQ items
+          faqItems.forEach(otherItem => {
+            if (otherItem !== item && otherItem.classList.contains('active')) {
+              otherItem.classList.remove('active');
+            }
+          });
+          
+          // Toggle current item
+          item.classList.toggle('active');
+          
+          // Add click animation
+          this.style.transform = 'translateY(2px)';
+          setTimeout(() => {
+            this.style.transform = '';
+          }, 200);
+        });
+      });
+    }
+
+    // Tab functionality
+    function initTabs() {
+      const tabs = document.querySelectorAll('.tab');
+      const tabContents = document.querySelectorAll('.tab-content');
+      
+      tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+          const tabId = this.getAttribute('data-tab');
+          
+          // Remove active class from all tabs and contents
+          tabs.forEach(t => t.classList.remove('active'));
+          tabContents.forEach(content => content.classList.remove('active'));
+          
+          // Add active class to clicked tab and corresponding content
+          this.classList.add('active');
+          document.getElementById(`${tabId}-tab`).classList.add('active');
+          
+          // Add click animation
+          this.style.transform = 'translateY(2px)';
+          setTimeout(() => {
+            this.style.transform = '';
+          }, 200);
+        });
+      });
+    }
+
+    // Switch tab programmatically
+    function switchTab(tabName) {
+      const tabs = document.querySelectorAll('.tab');
+      const tabContents = document.querySelectorAll('.tab-content');
+      
+      // Remove active class from all tabs and contents
+      tabs.forEach(t => t.classList.remove('active'));
+      tabContents.forEach(content => content.classList.remove('active'));
+      
+      // Add active class to specified tab and content
+      document.querySelector(`.tab[data-tab="${tabName}"]`).classList.add('active');
+      document.getElementById(`${tabName}-tab`).classList.add('active');
+    }
+
+    // Check URL hash for direct navigation
+    function checkUrlHash() {
+      const hash = window.location.hash;
+      if (hash === '#faq-section') {
+        switchTab('faq');
+      } else if (hash === '#about-section') {
+        switchTab('about');
+      }
+    }
+
+    // Contact button functionality
+    contactBtn.addEventListener('click', function() {
+      // Add click animation
+      this.style.transform = 'translateY(2px)';
+      this.style.boxShadow = '0 0 0 3px black, 2px 2px 0 black';
+      
+      setTimeout(() => {
+        this.style.transform = '';
+        this.style.boxShadow = '';
+        
+        // Show contact information
+        alert('Contact Us:\n\nEmail: support@gwaluv.com\nTwitter: @gwaluv_app\nInstagram: @gwaluv_official\n\nWe\'d love to hear from you!');
+      }, 200);
+    });
+
+    // Particle Effect System
+    const canvas = document.getElementById("particleCanvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particles = [];
+
+    function createParticle(x, y, auto = false, type = 'default') {
+      const shapes = ["heart", "circle", "glitter"];
+      const shape = type === 'success' ? 'heart' : 
+                   type === 'delete' ? 'circle' : 
+                   shapes[Math.floor(Math.random() * shapes.length)];
+      
+      const isBlueMode = body.classList.contains('blue-mode');
+      let color, size;
+      
+      if (type === 'success') {
+        color = isBlueMode ? "#4a8cff" : "#ff1493";
+        size = Math.random() * 10 + 8;
+      } else if (type === 'delete') {
+        color = "#ff4444";
+        size = Math.random() * 6 + 4;
+      } else {
+        if (shape === "heart") {
+          color = isBlueMode ? "blue" : "pink";
+        } else if (shape === "glitter") {
+          color = "white";
+        } else {
+          color = isBlueMode ? "lightblue" : "hotpink";
+        }
+        size = shape === "glitter" ? Math.random() * 4 + 2 : Math.random() * 12 + 8;
+      }
+      
+      particles.push({
+        x: x,
+        y: y,
+        size: size,
+        speedX: auto ? (Math.random() - 0.5) * 0.5 : (Math.random() - 0.5) * 2,
+        speedY: auto ? (Math.random() * -1 - 0.2) : (Math.random() - 1.5) * 2,
+        opacity: 1,
+        shape: shape,
+        color: color
+      });
+    }
+
+    function drawHeart(x, y, size, color, opacity) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.scale(size / 100, size / 100);
+      ctx.beginPath();
+      ctx.moveTo(75, 40);
+      ctx.bezierCurveTo(75, 37, 70, 25, 50, 25);
+      ctx.bezierCurveTo(20, 25, 20, 62.5, 20, 62.5);
+      ctx.bezierCurveTo(20, 80, 40, 102, 75, 120);
+      ctx.bezierCurveTo(110, 102, 130, 80, 130, 62.5);
+      ctx.bezierCurveTo(130, 62.5, 130, 25, 100, 25);
+      ctx.bezierCurveTo(85, 25, 75, 37, 75, 40);
+      ctx.closePath();
+      
+      if (color === "pink") {
+        ctx.fillStyle = `rgba(255,182,193, ${opacity})`;
+      } else if (color === "blue") {
+        ctx.fillStyle = `rgba(100, 180, 255, ${opacity})`;
+      } else if (color === "lightblue") {
+        ctx.fillStyle = `rgba(173, 216, 230, ${opacity})`;
+      } else if (color === "#ff1493") {
+        ctx.fillStyle = `rgba(255,20,147, ${opacity})`;
+      } else if (color === "#4a8cff") {
+        ctx.fillStyle = `rgba(74,140,255, ${opacity})`;
+      } else if (color === "#ff4444") {
+        ctx.fillStyle = `rgba(255,68,68, ${opacity})`;
+      } else {
+        ctx.fillStyle = `rgba(255,105,180, ${opacity})`;
+      }
+      
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < particles.length; i++) {
+        let p = particles[i];
+        p.x += p.speedX;
+        p.y += p.speedY;
+        p.opacity -= 0.01;
+
+        if (p.shape === "heart") {
+          drawHeart(p.x, p.y, p.size, p.color, p.opacity);
+        } else if (p.shape === "circle") {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size / 2, 0, Math.PI * 2);
+          
+          if (p.color === "pink") {
+            ctx.fillStyle = `rgba(255,182,193, ${p.opacity})`;
+          } else if (p.color === "blue") {
+            ctx.fillStyle = `rgba(100, 180, 255, ${p.opacity})`;
+          } else if (p.color === "lightblue") {
+            ctx.fillStyle = `rgba(173, 216, 230, ${p.opacity})`;
+          } else if (p.color === "#ff1493") {
+            ctx.fillStyle = `rgba(255,20,147, ${p.opacity})`;
+          } else if (p.color === "#4a8cff") {
+            ctx.fillStyle = `rgba(74,140,255, ${p.opacity})`;
+          } else if (p.color === "#ff4444") {
+            ctx.fillStyle = `rgba(255,68,68, ${p.opacity})`;
+          } else if (p.color === "white") {
+            ctx.fillStyle = `rgba(255,255,255,${p.opacity})`;
+          } else {
+            ctx.fillStyle = `rgba(255,105,180, ${p.opacity})`;
+          }
+          
+          ctx.fill();
+        } else if (p.shape === "glitter") {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size / 2, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255,255,255,${p.opacity})`;
+          ctx.fill();
+        }
+
+        if (p.opacity <= 0) {
+          particles.splice(i, 1);
+          i--;
+        }
+      }
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    // Auto glitter sprinkle generator
+    setInterval(() => {
+      createParticle(Math.random() * canvas.width, Math.random() * canvas.height, true);
+    }, 150);
+
+    // Mobile touch events for particles
+    let touchTimer;
+    window.addEventListener("touchstart", (e) => {
+      const touch = e.touches[0];
+      for (let i = 0; i < 5; i++) {
+        createParticle(touch.clientX, touch.clientY);
+      }
+      
+      // Long touch for more particles
+      touchTimer = setTimeout(() => {
+        for (let i = 0; i < 15; i++) {
+          createParticle(touch.clientX, touch.clientY);
+        }
+      }, 500);
+    });
+
+    window.addEventListener("touchend", () => {
+      clearTimeout(touchTimer);
+    });
+
+    window.addEventListener("touchmove", (e) => {
+      const touch = e.touches[0];
+      for (let i = 0; i < 2; i++) {
+        createParticle(touch.clientX, touch.clientY);
+      }
+    });
+
+    // Mouse events for desktop
+    window.addEventListener("mousemove", (e) => {
+      for (let i = 0; i < 3; i++) {
+        createParticle(e.clientX, e.clientY);
+      }
+    });
+
+    window.addEventListener("click", (e) => {
+      for (let i = 0; i < 10; i++) {
+        createParticle(e.clientX, e.clientY);
+      }
+    });
+
+    window.addEventListener("resize", () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>GWALUV</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    /* Mobile-first responsive design */
+    * {
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins';
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      text-align: center;
+      color: black;
+      position: relative;
+      overflow-x: hidden;
+      background: #f8c6d6;
+      transition: background-color 0.3s ease;
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    body.blue-mode {
+      background: #c6e2f8;
+    }
+
+    /* Mobile-optimized Glowing Heart Background */
+    .heart-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: radial-gradient(circle at center, 
+                  rgba(255, 255, 255, 0.9) 10%, 
+                  rgba(255, 105, 180, 0.6) 30%, 
+                  rgba(255, 105, 180, 0.4) 50%, 
+                  rgba(255, 192, 203, 0.2) 70%, 
+                  rgba(255, 182, 193, 0.1) 90%);
+      z-index: -2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    body.blue-mode .heart-background {
+      background: radial-gradient(circle at center, 
+                  rgba(255, 255, 255, 0.9) 10%, 
+                  rgba(100, 180, 255, 0.6) 30%, 
+                  rgba(100, 180, 255, 0.4) 50%, 
+                  rgba(173, 216, 230, 0.2) 70%, 
+                  rgba(173, 216, 230, 0.1) 90%);
+    }
+
+    .heart {
+      position: absolute;
+      width: 220px;
+      height: 200px;
+      background: radial-gradient(circle at center, white 20%, pink 70%, hotpink 100%);
+      clip-path: path("M 100 30 C 100 0, 0 0, 0 60 C 0 100, 100 180, 100 180 C 100 180, 200 100, 200 60 C 200 0, 100 0, 100 30 Z");
+      filter: blur(12px);
+      animation: pulse 3s infinite ease-in-out;
+    }
+
+    body.blue-mode .heart {
+      background: radial-gradient(circle at center, white 20%, #a0d2ff 70%, #4a8cff 100%);
+    }
+
+    .heart::before {
+      content: "";
+      position: absolute;
+      inset: -50px;
+      background: radial-gradient(circle at center, white 10%, pink 40%, hotpink 80%, transparent 100%);
+      clip-path: inherit;
+      z-index: -1;
+      filter: blur(25px);
+    }
+
+    body.blue-mode .heart::before {
+      background: radial-gradient(circle at center, white 10%, #a0d2ff 40%, #4a8cff 80%, transparent 100%);
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.2); opacity: 1; }
+    }
+
+    /* Mobile Welcome Content */
+    .welcome-container {
+      width: 90%;
+      max-width: 500px;
+      padding: 30px 20px;
+      margin-top: 80px;
+      margin-bottom: 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .welcome-to {
+      font-size: 20px;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2);
+      opacity: 0;
+      animation: fadeInUp 2s ease forwards;
+      animation-delay: 0.5s;
+      line-height: 1.4;
+    }
+
+    .gwa-title {
+      font-size: 42px;
+      font-weight: bold;
+      text-shadow: 3px 3px #000;
+      color: #ff1493;
+      margin: 20px 0;
+      opacity: 0;
+      animation: fadeZoom 2s ease forwards;
+      animation-delay: 1s;
+      line-height: 1.2;
+    }
+
+    body.blue-mode .gwa-title {
+      color: #4a8cff;
+    }
+
+    .calculator-system {
+      font-size: 20px;
+      margin-bottom: 30px;
+      text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2);
+      opacity: 0;
+      animation: fadeInUp 2s ease forwards;
+      animation-delay: 1.5s;
+      line-height: 1.4;
+    }
+
+    .description {
+      font-size: 12px;
+      line-height: 1.8;
+      margin-bottom: 40px;
+      color: #333;
+      text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.5);
+      opacity: 0;
+      animation: glowIn 2s ease forwards;
+      animation-delay: 2s;
+      padding: 0 10px;
+    }
+
+    body.blue-mode .description {
+      animation: glowInBlue 2s ease forwards;
+      animation-delay: 2s;
+    }
+
+    /* Mobile-optimized Stats Cards */
+    .stats-container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      width: 100%;
+      max-width: 400px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.95);
+      border: 3px solid black;
+      padding: 20px 15px;
+      box-shadow: 0 0 0 3px black, 4px 4px 0 black;
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      -webkit-touch-callout: none;
+      user-select: none;
+    }
+
+    .stat-card:active {
+      transform: translateY(2px);
+      box-shadow: 0 0 0 3px black, 2px 2px 0 black;
+    }
+
+    .stat-icon {
+      font-size: 24px;
+      margin-bottom: 10px;
+      color: #ff1493;
+    }
+
+    body.blue-mode .stat-icon {
+      color: #4a8cff;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: bold;
+      color: #ff1493;
+      margin-bottom: 5px;
+    }
+
+    body.blue-mode .stat-value {
+      color: #4a8cff;
+    }
+
+    .stat-label {
+      font-size: 9px;
+      color: #333;
+    }
+
+    /* Mobile Start Button */
+    .start-btn {
+      background: pink;
+      border: 4px solid black;
+      padding: 18px 40px;
+      font-family: 'Poppins';
+      cursor: pointer;
+      box-shadow: 0 0 0 4px black, 6px 6px 0 black;
+      transition: transform 0.2s, box-shadow 0.2s;
+      font-size: 16px;
+      margin: 20px 0 40px;
+      color: white;
+      -webkit-touch-callout: none;
+      user-select: none;
+      min-width: 200px;
+    }
+
+    body.blue-mode .start-btn {
+      background: #a0d2ff;
+    }
+
+    .start-btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 0 0 4px black, 2px 2px 0 black;
+    }
+
+    /* Mobile Features List */
+    .features-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      width: 100%;
+      max-width: 400px;
+      margin-bottom: 40px;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.9);
+      border: 3px solid black;
+      padding: 15px;
+      box-shadow: 0 0 0 3px black, 3px 3px 0 black;
+      text-align: left;
+    }
+
+    .feature-icon {
+      font-size: 20px;
+      color: #ff1493;
+      margin-right: 15px;
+      min-width: 30px;
+    }
+
+    body.blue-mode .feature-icon {
+      color: #4a8cff;
+    }
+
+    .feature-text {
+      font-size: 11px;
+      line-height: 1.5;
+      color: #333;
+    }
+
+    /* Mobile Footer */
+    .mobile-footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      border-top: 4px solid black;
+      padding: 15px;
+      z-index: 100;
+      box-shadow: 0 -4px 0 4px black, 0 -8px 0 8px rgba(0,0,0,0.1);
+      padding-bottom: max(15px, env(safe-area-inset-bottom));
+    }
+
+    .footer-text {
+      font-size: 10px;
+      color: #333;
+      margin: 0;
+    }
+
+    /* Animation keyframes */
+    @keyframes fadeZoom {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes fadeInUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes glowIn {
+      from { opacity: 0; text-shadow: none; }
+      to { opacity: 1; text-shadow: 0 0 10px pink, 0 0 20px hotpink; }
+    }
+
+    @keyframes glowInBlue {
+      from { opacity: 0; text-shadow: none; }
+      to { opacity: 1; text-shadow: 0 0 10px #a0d2ff, 0 0 20px #4a8cff; }
+    }
+
+    /* Particle Layer - Mobile optimized */
+    canvas#particleCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Swipe indicator for mobile */
+    .swipe-indicator {
+      position: fixed;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 10px;
+      color: rgba(0, 0, 0, 0.6);
+      animation: swipeUp 2s infinite;
+      z-index: 50;
+      display: none;
+    }
+
+    @keyframes swipeUp {
+      0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.3; }
+      50% { transform: translateX(-50%) translateY(-10px); opacity: 1; }
+    }
+
+    /* Responsive adjustments for very small screens */
+    @media (max-width: 350px) {
+      .welcome-to {
+        font-size: 18px;
+      }
+      
+      .gwa-title {
+        font-size: 36px;
+      }
+      
+      .calculator-system {
+        font-size: 18px;
+      }
+      
+      .stat-card {
+        padding: 15px 10px;
+      }
+      
+      .stat-value {
+        font-size: 20px;
+      }
+      
+      .start-btn {
+        padding: 16px 30px;
+        font-size: 14px;
+        min-width: 180px;
+      }
+    }
+
+    /* Hide swipe indicator on desktop */
+    @media (min-width: 768px) {
+      .swipe-indicator {
+        display: none;
+      }
+      
+      .welcome-container {
+        margin-top: 100px;
+      }
+    }
+
+    /* Portrait orientation optimization */
+    @media (orientation: portrait) and (max-height: 700px) {
+      .welcome-container {
+        margin-top: 60px;
+        margin-bottom: 80px;
+      }
+      
+      .gwa-title {
+        font-size: 36px;
+        margin: 15px 0;
+      }
+      
+      .stats-container {
+        grid-template-columns: 1fr;
+        max-width: 300px;
+      }
+    }
+
+    /* Landscape orientation optimization */
+    @media (orientation: landscape) and (max-height: 500px) {
+      .welcome-container {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 60px;
+        margin-bottom: 70px;
+      }
+      
+      .welcome-text {
+        width: 100%;
+      }
+      
+      .stats-container {
+        grid-template-columns: repeat(3, 1fr);
+        width: 80%;
+      }
+      
+      .features-list {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Heart Glow Background -->
+  <div class="heart-background">
+    <div class="heart"></div>
+  </div>
+
+  <!-- Particle Effect Canvas -->
+  <canvas id="particleCanvas"></canvas>
+
+  <!-- Swipe Indicator (Mobile only) -->
+  <div class="swipe-indicator">
+    <i class="fas fa-arrow-up"></i> Swipe up to explore
+  </div>
+
+  <!-- Welcome Content -->
+  <div class="welcome-container">
+    <div class="welcome-text">
+      <div class="welcome-to">Welcome to</div>
+      <div class="gwa-title">GWALUV</div>
+      <div class="calculator-system">GRADE CALCULATOR</div>
+      
+      <p class="description">
+        Track your academic performance and calculate your General Weighted Average easily. Perfect for students who want to stay on top of their grades!
+      </p>
+    </div>
+    
+  
+    <!-- Features List -->
+    <div class="features-list">
+      <div class="feature-item">
+        <div class="feature-icon">
+          <i class="fas fa-heart"></i>
+        </div>
+        <div class="feature-text">Cute pink & blue themes with heart backgrounds</div>
+      </div>
+      
+      <div class="feature-item">
+        <div class="feature-icon">
+          <i class="fas fa-mobile-alt"></i>
+        </div>
+        <div class="feature-text">Mobile-optimized design for on-the-go use</div>
+      </div>
+      
+      <div class="feature-item">
+        <div class="feature-icon">
+          <i class="fas fa-bolt"></i>
+        </div>
+        <div class="feature-text">Instant GWA calculation with visual feedback</div>
+      </div>
+    </div>
+    
+    <!-- Start Button -->
+    <button class="start-btn" id="start-button">
+      NEXT
+    </button>
+  </div>
+
+  <!-- Mobile Footer -->
+  <div class="mobile-footer">
+    <p class="footer-text">© 2023 GWALUV | Made with <i class="fas fa-heart" style="color: #ff1493;"></i> for students</p>
+  </div>
+
+  <script>
+    // Load sample data for stats
+    document.addEventListener('DOMContentLoaded', function() {
+      // Set initial stats values
+      document.getElementById('stat-subjects').querySelector('.stat-value').textContent = '8';
+      document.getElementById('stat-gwa').querySelector('.stat-value').textContent = '1.85';
+      document.getElementById('stat-best').querySelector('.stat-value').textContent = '1.0';
+      document.getElementById('stat-trend').querySelector('.stat-value').textContent = '↑ 12%';
+      
+      // Show swipe indicator on mobile
+      if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        document.querySelector('.swipe-indicator').style.display = 'block';
+      }
+    });
+
+    // Start button functionality - GOES TO CHOOSE.HTML
+    const startButton = document.getElementById('start-button');
+    startButton.addEventListener('click', function() {
+      // Add click animation
+      this.style.transform = 'translateY(4px)';
+      this.style.boxShadow = '0 0 0 4px black, 2px 2px 0 black';
+      
+      setTimeout(() => {
+        this.style.transform = '';
+        this.style.boxShadow = '';
+        
+        // Navigate to choose.html page
+        window.location.href = 'choose.html';
+      }, 200);
+    });
+
+    // Particle Effect
+    const canvas = document.getElementById("particleCanvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particles = [];
+
+    function createParticle(x, y, auto = false) {
+      const shapes = ["heart", "circle", "glitter"];
+      const shape = shapes[Math.floor(Math.random() * shapes.length)];
+      const isBlueMode = document.body.classList.contains('blue-mode');
+      
+      particles.push({
+        x: x,
+        y: y,
+        size: shape === "glitter" ? Math.random() * 4 + 2 : Math.random() * 12 + 8,
+        speedX: auto ? (Math.random() - 0.5) * 0.5 : (Math.random() - 0.5) * 2,
+        speedY: auto ? (Math.random() * -1 - 0.2) : (Math.random() - 1.5) * 2,
+        opacity: 1,
+        shape: shape,
+        color: shape === "heart" ? (isBlueMode ? "blue" : "pink") : (shape === "glitter" ? "white" : (isBlueMode ? "lightblue" : "hotpink"))
+      });
+    }
+
+    function drawHeart(x, y, size, color, opacity) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.scale(size / 100, size / 100);
+      ctx.beginPath();
+      ctx.moveTo(75, 40);
+      ctx.bezierCurveTo(75, 37, 70, 25, 50, 25);
+      ctx.bezierCurveTo(20, 25, 20, 62.5, 20, 62.5);
+      ctx.bezierCurveTo(20, 80, 40, 102, 75, 120);
+      ctx.bezierCurveTo(110, 102, 130, 80, 130, 62.5);
+      ctx.bezierCurveTo(130, 62.5, 130, 25, 100, 25);
+      ctx.bezierCurveTo(85, 25, 75, 37, 75, 40);
+      ctx.closePath();
+      
+      if (color === "pink") {
+        ctx.fillStyle = `rgba(255,182,193, ${opacity})`;
+      } else if (color === "blue") {
+        ctx.fillStyle = `rgba(100, 180, 255, ${opacity})`;
+      } else if (color === "lightblue") {
+        ctx.fillStyle = `rgba(173, 216, 230, ${opacity})`;
+      } else {
+        ctx.fillStyle = `rgba(255,105,180, ${opacity})`;
+      }
+      
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < particles.length; i++) {
+        let p = particles[i];
+        p.x += p.speedX;
+        p.y += p.speedY;
+        p.opacity -= 0.01;
+
+        if (p.shape === "heart") {
+          drawHeart(p.x, p.y, p.size, p.color, p.opacity);
+        } else if (p.shape === "circle") {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size / 2, 0, Math.PI * 2);
+          
+          if (p.color === "pink") {
+            ctx.fillStyle = `rgba(255,182,193, ${p.opacity})`;
+          } else if (p.color === "blue") {
+            ctx.fillStyle = `rgba(100, 180, 255, ${p.opacity})`;
+          } else if (p.color === "lightblue") {
+            ctx.fillStyle = `rgba(173, 216, 230, ${p.opacity})`;
+          } else {
+            ctx.fillStyle = `rgba(255,105,180, ${p.opacity})`;
+          }
+          
+          ctx.fill();
+        } else if (p.shape === "glitter") {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size / 2, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255,255,255,${p.opacity})`;
+          ctx.fill();
+        }
+
+        if (p.opacity <= 0) {
+          particles.splice(i, 1);
+          i--;
+        }
+      }
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    // Auto glitter sprinkle generator
+    setInterval(() => {
+      createParticle(Math.random() * canvas.width, Math.random() * canvas.height, true);
+    }, 150);
+
+    // Mobile touch events for particles
+    let touchTimer;
+    window.addEventListener("touchstart", (e) => {
+      const touch = e.touches[0];
+      for (let i = 0; i < 5; i++) {
+        createParticle(touch.clientX, touch.clientY);
+      }
+      
+      // Long touch for more particles
+      touchTimer = setTimeout(() => {
+        for (let i = 0; i < 15; i++) {
+          createParticle(touch.clientX, touch.clientY);
+        }
+      }, 500);
+    });
+
+    window.addEventListener("touchend", () => {
+      clearTimeout(touchTimer);
+    });
+
+    window.addEventListener("touchmove", (e) => {
+      const touch = e.touches[0];
+      for (let i = 0; i < 2; i++) {
+        createParticle(touch.clientX, touch.clientY);
+      }
+    });
+
+    // Mouse events for desktop
+    window.addEventListener("mousemove", (e) => {
+      for (let i = 0; i < 3; i++) {
+        createParticle(e.clientX, e.clientY);
+      }
+    });
+
+    window.addEventListener("click", (e) => {
+      for (let i = 0; i < 10; i++) {
+        createParticle(e.clientX, e.clientY);
+      }
+    });
+
+    window.addEventListener("resize", () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    // Swipe detection for mobile
+    let startY;
+    window.addEventListener('touchstart', function(e) {
+      startY = e.touches[0].clientY;
+    }, {passive: true});
+
+    window.addEventListener('touchend', function(e) {
+      if (!startY) return;
+      
+      const endY = e.changedTouches[0].clientY;
+      const diffY = startY - endY;
+      
+      // Swipe up detected
+      if (diffY > 50) {
+        // Hide swipe indicator
+        document.querySelector('.swipe-indicator').style.opacity = '0';
+        setTimeout(() => {
+          document.querySelector('.swipe-indicator').style.display = 'none';
+        }, 300);
+      }
+      
+      startY = null;
+    }, {passive: true});
+  </script>
+</body>
+</html>

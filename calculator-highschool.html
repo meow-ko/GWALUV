@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>GWALUV</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    /* Mobile-first responsive design - Consistent with choose page */
+    * {
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins';
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      text-align: center;
+      color: black;
+      position: relative;
+      overflow-x: hidden;
+      background: #f8c6d6;
+      transition: background-color 0.3s ease;
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    body.blue-mode {
+      background: #c6e2f8;
+    }
+
+    /* Mobile-safe menu icon */
+    .menu-icon {
+      position: fixed;
+      top: max(20px, env(safe-area-inset-top));
+      right: 20px;
+      font-size: 20px;
+      cursor: pointer;
+      z-index: 1000;
+      color: #ff1493;
+      background: rgba(255, 255, 255, 0.95);
+      border: 3px solid black;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 0 3px black, 4px 4px 0 black;
+      transition: transform 0.2s, box-shadow 0.2s;
+      border-radius: 0;
+      -webkit-touch-callout: none;
+      user-select: none;
+    }
+
+    body.blue-mode .menu-icon {
+      color: #4a8cff;
+    }
+
+    .menu-icon:active {
+      transform: translateY(2px);
+      box-shadow: 0 0 0 3px black, 2px 2px 0 black;
+    }
+
+    /* Change menu icon to X when sidebar is open - Mobile optimized */
+    .sidebar-open .menu-icon i {
+      display: none;
+    }
+    
+    .sidebar-open .menu-icon::after {
+      content: "X";
+      font-family: 'Poppins';
+      font-size: 18px;
+    }
+
+    /* Sidebar - Mobile optimized */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 85%;
+      max-width: 320px;
+      height: 100vh;
+      background: rgba(255, 255, 255, 0.98);
+      border-left: 4px solid black;
+      box-shadow: -4px 0 0 4px black, -8px 0 0 8px rgba(0,0,0,0.2);
+      z-index: 999;
+      padding: 20px;
+      padding-top: max(30px, env(safe-area-inset-top));
+      transition: right 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .sidebar.open {
+      right: 0;
+    }
+
+    .sidebar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 15px;
+      border-bottom: 3px solid black;
+    }
+
+    .sidebar-title {
+      font-size: 14px;
+      color: #ff1493;
+      text-shadow: 1px 1px 0px #000;
+    }
+
+    body.blue-mode .sidebar-title {
+      color: #4a8cff;
+    }
+
+    .close-btn {
+      background: pink;
+      border: 3px solid black;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 0 0 3px black, 2px 2px 0 black;
+      transition: transform 0.2s, box-shadow 0.2s;
+      -webkit-touch-callout: none;
+      user-select: none;
+    }
+
+    body.blue-mode .close-btn {
+      background: #a0d2ff;
+    }
+
+    .close-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 0 0 3px black, 1px 1px 0 black;
+    }
+
+    .sidebar-menu {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar-menu li {
+      margin-bottom: 15px;
+    }
+
+    .sidebar-menu a {
+      display: block;
+      padding: 14px 15px;
+      background: white;
+      border: 3px solid black;
+      text-decoration: none;
+      color: black;
+      box-shadow: 0 0 0 3px black, 3px 3px 0 black;
+      transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
+      font-size: 11px;
+      -webkit-touch-callout: none;
+      user-select: none;
+    }
+
+    .sidebar-menu a:active {
+      transform: translateY(2px);
+      box-shadow: 0 0 0 3px black, 1px 1px 0 black;
+    }
+
+    .sidebar-menu a:hover,
+    .sidebar-menu a.active {
+      background: pink;
+      color: white;
+    }
+
+    body.blue-mode .sidebar-menu a:hover,
+    body.blue-mode .sidebar-menu a.active {
+      background: #a0d2ff;
+      color: white;
+    }
+
+    .mode-switcher {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 3px solid black;
+    }
+
+    .mode-title {
+      font-size: 14px;
+      color: #ff1493;
+      text-shadow: 1px 1px 0px #000;
+      margin-bottom: 15px;
+    }
+
+    body.blue-mode .mode-title {
+      color: #4a8cff;
+    }
+
+    .mode-btn {
+      display: block;
+      width: 100%;
+      padding: 14px 15px;
+      background: pink;
+      border: 3px solid black;
+      font-family: 'Poppins';
+      cursor: pointer;
+      box-shadow: 0 0 0 3px black, 3px 3px 0 black;
+      transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
+      margin-bottom: 12px;
+      color: white;
+      font-size: 11px;
+      -webkit-touch-callout: none;
+      user-select: none;
+    }
+
+    .mode-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 0 0 3px black, 1px 1px 0 black;
+    }
+
+    .blue-mode-btn {
+      background: #a0d2ff;
+      color: white;
+    }
+
+    /* Overlay for mobile */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 998;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease;
+    }
+
+    .overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Mobile-optimized Glowing Heart Background */
+    .heart-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: radial-gradient(circle at center, 
+                  rgba(255, 255, 255, 0.9) 10%, 
+                  rgba(255, 105, 180, 0.6) 30%, 
+                  rgba(255, 105, 180, 0.4) 50%, 
+                  rgba(255, 192, 203, 0.2) 70%, 
+                  rgba(255, 182, 193, 0.1) 90%);
+      z-index: -2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    body.blue-mode .heart-background {
+      background: radial-gradient(circle at center, 
+                  rgba(255, 255, 255, 0.9) 10%, 
+                  rgba(100, 180, 255, 0.6) 30%, 
+                  rgba(100, 180, 255, 0.4) 50%, 
+                  rgba(173, 216, 230, 0.2) 70%, 
+                  rgba(173, 216, 230, 0.1) 90%);
+    }
+
+    .heart {
+      position: absolute;
+      width: 220px;
+      height: 200px;
+      background: radial-gradient(circle at center, white 20%, pink 70%, hotpink 100%);
+      clip-path: path("M 100 30 C 100 0, 0 0, 0 60 C 0 100, 100 180, 100 180 C 100 180, 200 100, 200 60 C 200 0, 100 0, 100 30 Z");
+      filter: blur(12px);
+      animation: pulse 3s infinite ease-in-out;
+    }
+
+    body.blue-mode .heart {
+      background: radial-gradient(circle at center, white 20%, #a0d2ff 70%, #4a8cff 100%);
+    }
+
+    .heart::before {
+      content: "";
+      position: absolute;
+      inset: -50px;
+      background: radial-gradient(circle at center, white 10%, pink 40%, hotpink 80%, transparent 100%);
+      clip-path: inherit;
+      z-index: -1;
+      filter: blur(25px);
+    }
+
+    body.blue-mode .heart::before {
+      background: radial-gradient(circle at center, white 10%, #a0d2ff 40%, #4a8cff 80%, transparent 100%);
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.2); opacity: 1; }
+    }
+
+    /* Calculator Container */
+    .calculator-container {
+      width: 90%;
+      max-width: 500px;
+      padding: 30px 20px;
+      margin-top: 80px;
+      margin-bottom: 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .page-title {
+      font-size: 20px;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2);
+      opacity: 0;
+      animation: fadeInUp 1s ease forwards;
+      animation-delay: 0.3s;
+      line-height: 1.4;
+    }
+
+    .level-badge {
+      background: pink;
+      color: white;
+      padding: 8px 15px;
+      border: 3px solid black;
+      font-size: 14px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 0 3px black, 3px 3px 0 black;
+    }
+
+    body.blue-mode .level-badge {
+      background: #a0d2ff;
+    }
+
+    /* Subject Input Area */
+    .subject-input-area {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      border: 4px solid black;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 0 4px black, 6px 6px 0 black;
+    }
+
+    .subject-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+      align-items: center;
+      position: relative;
+    }
+
+    .subject-input {
+      flex: 1;
+      padding: 12px 15px 12px 40px;
+      border: 3px solid black;
+      font-family: 'Poppins';
+      font-size: 14px;
+      background: white;
+    }
+
+    .grade-input {
+      width: 80px;
+      padding: 12px 10px;
+      border: 3px solid black;
+      font-family: 'Poppins';
+      font-size: 14px;
+      text-align: center;
+      background: white;
+    }
+
+    .subject-number {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: pink;
+      color: white;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: bold;
+      border: 2px solid black;
+    }
+
+    body.blue-mode .subject-number {
+      background: #a0d2ff;
+    }
+
+    .delete-subject {
+      position: absolute;
+      right: -30px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #ff4444;
+      color: white;
+      border: 2px solid black;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 12px;
+      box-shadow: 0 0 0 2px black;
+      transition: transform 0.2s;
+      -webkit-touch-callout: none;
+      user-select: none;
+    }
+
+    .delete-subject:active {
+      transform: translateY(-50%) scale(0.9);
+    }
+
+    .add-subject-btn {
+      width: 100%;
+      padding: 15px;
+      background: pink;
+      color: white;
+      border: 3px solid black;
+      font-family: 'Poppins';
+      cursor: pointer;
+      font-size: 14px;
+      box-shadow: 0 0 0 3px black, 4px 4px 0 black;
+      transition: transform 0.2s, box-shadow 0.2s;
+      margin-top: 10px;
+      -webkit-touch-callout: none;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .add-subject-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 0 0 3px black, 2px 2px 0 black;
+    }
+
+    body.blue-mode .add-subject-btn {
+      background: #a0d2ff;
+    }
+
+    /* Results Area - UPDATED */
+    .results-area {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      border: 4px solid black;
+      padding: 25px 20px;
+      box-shadow: 0 0 0 4px black, 6px 6px 0 black;
+      margin-bottom: 20px;
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .result-title {
+      font-size: 18px;
+      margin-bottom: 15px;
+      color: #ff1493;
+      text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.2);
+    }
+
+    body.blue-mode .result-title {
+      color: #4a8cff;
+    }
+
+    .average-display {
+      font-size: 48px;
+      font-weight: bold;
+      color: #333;
+      margin: 20px 0;
+      text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.1);
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .average-placeholder {
+      font-size: 20px;
+      color: #aaa;
+      font-style: italic;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 20px 0;
+    }
+
+    .grade-description {
+      font-size: 14px;
+      color: #666;
+      line-height: 1.5;
+      min-height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .subject-count {
+      font-size: 12px;
+      color: #888;
+      margin-top: 10px;
+    }
+
+    /* Action Buttons */
+    .action-buttons {
+      display: flex;
+      gap: 15px;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .action-btn {
+      padding: 15px 20px;
+      font-family: 'Poppins';
+      cursor: pointer;
+      font-size: 14px;
+      border: 3px solid black;
+      transition: transform 0.2s, box-shadow 0.2s;
+      -webkit-touch-callout: none;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex: 1;
+    }
+
+    .action-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 0 0 3px black, 2px 2px 0 black;
+    }
+
+    .calculate-btn {
+      background: pink;
+      color: white;
+      box-shadow: 0 0 0 3px black, 4px 4px 0 black;
+    }
+
+    body.blue-mode .calculate-btn {
+      background: #a0d2ff;
+    }
+
+    .back-btn {
+      background: white;
+      color: #333;
+      box-shadow: 0 0 0 3px black, 4px 4px 0 black;
+    }
+
+    /* Example Section */
+    .example-section {
+      width: 100%;
+      max-width: 400px;
+      margin-top: 20px;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.8);
+      border: 3px dashed #ff1493;
+      border-radius: 10px;
+    }
+
+    .example-title {
+      font-size: 12px;
+      color: #ff1493;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    body.blue-mode .example-title {
+      color: #4a8cff;
+    }
+
+    body.blue-mode .example-section {
+      border-color: #4a8cff;
+    }
+
+    .example-text {
+      font-size: 11px;
+      color: #666;
+      line-height: 1.4;
+    }
+
+    /* Mobile Footer */
+    .mobile-footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      border-top: 4px solid black;
+      padding: 15px;
+      z-index: 100;
+      box-shadow: 0 -4px 0 4px black, 0 -8px 0 8px rgba(0,0,0,0.1);
+      padding-bottom: max(15px, env(safe-area-inset-bottom));
+    }
+
+    .footer-text {
+      font-size: 10px;
+      color: #333;
+      margin: 0;
+    }
+
+    /* Animation keyframes */
+    @keyframes fadeInUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.5); opacity: 0; }
+      70% { transform: scale(1.1); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* Particle Layer - Mobile optimized */
+    canvas#particleCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 480px) {
+      .subject-row {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+      }
+      
+      .subject-input {
+        padding-left: 50px;
+      }
+      
+      .grade-input {
+        width: 100%;
+      }
+      
+      .delete-subject {
+        right: -25px;
+        width: 25px;
+        height: 25px;
+      }
+      
+      .page-title {
+        font-size: 18px;
+      }
+      
+      .average-display {
+        font-size: 40px;
+      }
+      
+      .action-btn {
+        padding: 12px 15px;
+        font-size: 13px;
+      }
+      
+      .subject-number {
+        left: 10px;
+      }
+    }
+
+    @media (max-width: 350px) {
+      .page-title {
+        font-size: 16px;
+      }
+      
+      .action-buttons {
+        flex-direction: column;
+      }
+      
+      .delete-subject {
+        right: -20px;
+        width: 20px;
+        height: 20px;
+        font-size: 10px;
+      }
+    }
+
+    @media (orientation: landscape) and (max-height: 500px) {
+      .calculator-container {
+        margin-top: 60px;
+        margin-bottom: 70px;
+      }
+      
+      .subject-input-area {
+        padding: 15px;
+      }
+      
+      .subject-row {
+        flex-direction: row;
+        gap: 8px;
+      }
+      
+      .grade-input {
+        width: 70px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Menu Icon -->
+  <div class="menu-icon">
+    <i class="fas fa-bars"></i>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-title">MENU</div>
+      <div class="close-btn">
+        <i class="fas fa-times"></i>
+      </div>
+    </div>
+    <ul class="sidebar-menu">
+      <li><a href="welcome.html">Home</a></li>
+      <li><a href="choose.html">Choose Level</a></li>
+       <li><a href="calculator-highschool.html">Calculator</a></li>
+      <li><a href="setting.html" class="active">Settings</a></li>
+    </ul>
+    <div class="mode-switcher">
+      <div class="mode-title">THEME</div>
+      <button class="mode-btn pink-mode-btn">Pink Mode</button>
+      <button class="mode-btn blue-mode-btn">Blue Mode</button>
+    </div>
+  </div>
+
+  <!-- Overlay -->
+  <div class="overlay"></div>
+
+  <!-- Heart Glow Background -->
+  <div class="heart-background">
+    <div class="heart"></div>
+  </div>
+
+  <!-- Particle Effect Canvas -->
+  <canvas id="particleCanvas"></canvas>
+
+  <!-- Calculator Content -->
+  <div class="calculator-container">
+    <div class="page-title">HIGH SCHOOL GWA CALCULATOR</div>
+    <div class="level-badge">HIGH SCHOOL MODE</div>
+    
+    <!-- Subject Input Area -->
+    <div class="subject-input-area">
+      <div id="subject-container">
+        <!-- Subject rows will be dynamically added here -->
+      </div>
+      
+      <button class="add-subject-btn" id="add-subject">
+        <i class="fas fa-plus"></i> ADD ANOTHER SUBJECT
+      </button>
+    </div>
+    
+    <!-- Results Area - UPDATED -->
+    <div class="results-area">
+      <div class="result-title">YOUR AVERAGE GRADE</div>
+      
+      <!-- Initially show placeholder, hide average display -->
+      <div class="average-placeholder" id="average-placeholder">
+        Click "CALCULATE" to see your result
+      </div>
+      
+      <!-- Average display (hidden initially) -->
+      <div class="average-display" id="average-grade" style="display: none;"></div>
+      
+      <div class="grade-description" id="grade-description">
+        Enter your subjects and grades, then click calculate
+      </div>
+      <div class="subject-count" id="subject-count">Subjects: 0</div>
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button class="action-btn back-btn" id="back-to-choose">
+        <i class="fas fa-arrow-left"></i> BACK
+      </button>
+      
+      <button class="action-btn calculate-btn" id="calculate-average">
+        <i class="fas fa-calculator"></i> CALCULATE
+      </button>
+    </div>
+    
+
+    <!-- Example Section -->
+    <div class="example-section">
+      <div class="example-title">HOW TO USE</div>
+      <div class="example-text">
+        Enter subject names and grades (0-100). Example: "Mathematics" - 85, "Science" - 92. Add more subjects as needed.
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Footer -->
+  <div class="mobile-footer">
+    <p class="footer-text">© 2023 GWALUV | Made with <i class="fas fa-heart" style="color: #ff1493;"></i> for students</p>
+  </div>
+
+  <script>
+    // Load theme from localStorage
+    document.addEventListener('DOMContentLoaded', function() {
+      // Check for saved theme
+      const savedTheme = localStorage.getItem('gwaluv-theme');
+      if (savedTheme === 'blue') {
+        document.body.classList.add('blue-mode');
+        updateModeButtons();
+        updateHeartColors();
+      }
+      
+      // Add initial subject row
+      addSubjectRow();
+      
+      // Update subject count
+      updateSubjectCount();
+      
+      // Hide average result initially
+      hideAverageResult();
+    });
+
+    // Sidebar functionality
+    const menuIcon = document.querySelector('.menu-icon');
+    const sidebar = document.querySelector('.sidebar');
+    const closeBtn = document.querySelector('.close-btn');
+    const overlay = document.querySelector('.overlay');
+    const pinkModeBtn = document.querySelector('.pink-mode-btn');
+    const blueModeBtn = document.querySelector('.blue-mode-btn');
+    const body = document.body;
+    const menuItems = document.querySelectorAll('.sidebar-menu a');
+
+    // Function to close sidebar
+    function closeSidebar() {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('active');
+      body.classList.remove('sidebar-open');
+    }
+
+    // Function to open sidebar
+    function openSidebar() {
+      sidebar.classList.add('open');
+      overlay.classList.add('active');
+      body.classList.add('sidebar-open');
+    }
+
+    // Mobile touch events for menu
+    menuIcon.addEventListener('click', function(e) {
+      e.preventDefault();
+      if (sidebar.classList.contains('open')) {
+        closeSidebar();
+      } else {
+        openSidebar();
+      }
+    });
+
+    closeBtn.addEventListener('click', closeSidebar);
+    overlay.addEventListener('click', closeSidebar);
+
+    // Menu item click functionality
+    menuItems.forEach(item => {
+      item.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        // Remove active class from all items
+        menuItems.forEach(i => i.classList.remove('active'));
+        
+        // Add active class to clicked item
+        this.classList.add('active');
+        
+        // Close sidebar after clicking
+        setTimeout(() => {
+          closeSidebar();
+          
+          // Navigate to selected page
+          const pageName = this.textContent;
+          if (pageName === 'Home') {
+            window.location.href = 'welcome.html';
+          } else if (pageName === 'Choose Level') {
+            window.location.href = 'choose.html';
+          } else if (pageName === 'Calculator') {
+            window.location.href = 'calculator-highschool.html';
+          } else if (pageName === 'Settings') {
+            window.location.href = 'setting.html';
+          }
+        }, 300);
+      });
+    });
+
+    // Mode switching with localStorage
+    pinkModeBtn.addEventListener('click', function() {
+      body.classList.remove('blue-mode');
+      localStorage.setItem('gwaluv-theme', 'pink');
+      updateModeButtons();
+      updateHeartColors();
+    });
+
+    blueModeBtn.addEventListener('click', function() {
+      body.classList.add('blue-mode');
+      localStorage.setItem('gwaluv-theme', 'blue');
+      updateModeButtons();
+      updateHeartColors();
+    });
+
+    function updateModeButtons() {
+      const isBlueMode = body.classList.contains('blue-mode');
+      pinkModeBtn.style.background = isBlueMode ? 'pink' : '#ff69b4';
+      blueModeBtn.style.background = isBlueMode ? '#4a8cff' : '#a0d2ff';
+    }
+
+    function updateHeartColors() {
+      const isBlueMode = body.classList.contains('blue-mode');
+      const color = isBlueMode ? '#4a8cff' : '#ff1493';
+      
+      // Update all colored elements
+      document.querySelectorAll('.result-title, .example-title').forEach(el => {
+        el.style.color = color;
+      });
+    }
+
+    // Calculator functionality
+    const subjectContainer = document.getElementById('subject-container');
+    const addSubjectBtn = document.getElementById('add-subject');
+    const calculateBtn = document.getElementById('calculate-average');
+    const averageDisplay = document.getElementById('average-grade');
+    const averagePlaceholder = document.getElementById('average-placeholder');
+    const gradeDescription = document.getElementById('grade-description');
+    const subjectCountDisplay = document.getElementById('subject-count');
+    const backToChooseBtn = document.getElementById('back-to-choose');
+
+    let subjectCounter = 0;
+    let averageCalculated = false;
+
+    // Function to hide average result and show placeholder
+    function hideAverageResult() {
+      averageDisplay.style.display = 'none';
+      averagePlaceholder.style.display = 'flex';
+      averageCalculated = false;
+    }
+
+    // Function to show average result and hide placeholder
+    function showAverageResult() {
+      averagePlaceholder.style.display = 'none';
+      averageDisplay.style.display = 'flex';
+      averageCalculated = true;
+    }
+
+    // Function to add a new subject row
+    function addSubjectRow(subjectName = '', grade = '') {
+      subjectCounter++;
+      const subjectRow = document.createElement('div');
+      subjectRow.className = 'subject-row';
+      subjectRow.dataset.id = subjectCounter;
+      subjectRow.innerHTML = `
+        <div class="subject-number">${subjectCounter}</div>
+        <input type="text" class="subject-input" placeholder="Subject Name" value="${subjectName}">
+        <input type="number" class="grade-input" placeholder="Grade" min="0" max="100" value="${grade}">
+        <div class="delete-subject">
+          <i class="fas fa-times"></i>
+        </div>
+      `;
+      subjectContainer.appendChild(subjectRow);
+      
+      // Add event listeners to new inputs
+      const subjectInput = subjectRow.querySelector('.subject-input');
+      const gradeInput = subjectRow.querySelector('.grade-input');
+      const deleteBtn = subjectRow.querySelector('.delete-subject');
+      
+      // When user edits any input, hide the average result (if it was shown)
+      subjectInput.addEventListener('input', function() {
+        if (averageCalculated) {
+          hideAverageResult();
+          gradeDescription.textContent = "Click 'CALCULATE' to update your result";
+        }
+      });
+      
+      gradeInput.addEventListener('input', function() {
+        if (averageCalculated) {
+          hideAverageResult();
+          gradeDescription.textContent = "Click 'CALCULATE' to update your result";
+        }
+      });
+      
+      // Delete button functionality
+      deleteBtn.addEventListener('click', function() {
+        if (document.querySelectorAll('.subject-row').length <= 1) {
+          alert('You need at least one subject!');
+          return;
+        }
+        
+        // Remove the subject row
+        subjectRow.remove();
+        
+        // Recalculate subject numbers
+        updateSubjectNumbers();
+        
+        // Hide average result if it was shown
+        hideAverageResult();
+        gradeDescription.textContent = "Subject removed. Click 'CALCULATE' to update your result";
+        
+        // Update subject count
+        updateSubjectCount();
+        
+        // Create delete particle effect
+        createDeleteEffect(this);
+      });
+      
+      // Update subject count
+      updateSubjectCount();
+    }
+
+    // Function to update subject numbers after deletion
+    function updateSubjectNumbers() {
+      const subjectRows = document.querySelectorAll('.subject-row');
+      subjectCounter = 0;
+      
+      subjectRows.forEach(row => {
+        subjectCounter++;
+        row.dataset.id = subjectCounter;
+        const numberElement = row.querySelector('.subject-number');
+        if (numberElement) {
+          numberElement.textContent = subjectCounter;
+        }
+      });
+    }
+
+    // Function to update subject count display
+    function updateSubjectCount() {
+      const subjectCount = document.querySelectorAll('.subject-row').length;
+      subjectCountDisplay.textContent = `Subjects: ${subjectCount}`;
+    }
+
+    // Calculate average grade
+    function calculateAverage() {
+      const gradeInputs = document.querySelectorAll('.grade-input');
+      const subjectInputs = document.querySelectorAll('.subject-input');
+      
+      let total = 0;
+      let count = 0;
+      let errorMessages = [];
+      
+      // Check for empty fields
+      for (let i = 0; i < gradeInputs.length; i++) {
+        const subject = subjectInputs[i].value.trim();
+        const grade = gradeInputs[i].value;
+        
+        if (subject === '') {
+          errorMessages.push(`Subject ${i+1} has no name`);
+        }
+        
+        if (grade === '') {
+          errorMessages.push(`Subject ${i+1} has no grade`);
+        }
+        
+        const gradeNum = parseFloat(grade);
+        
+        if (!isNaN(gradeNum) && gradeNum >= 0 && gradeNum <= 100) {
+          total += gradeNum;
+          count++;
+        }
+      }
+      
+      if (errorMessages.length > 0) {
+        alert("Please fill in all fields:\n" + errorMessages.slice(0, 3).join("\n"));
+        hideAverageResult();
+        return;
+      }
+      
+      if (count > 0) {
+        const average = total / count;
+        
+        // Show the average result with animation
+        showAverageResult();
+        averageDisplay.textContent = average.toFixed(2);
+        
+        // Add pop-in animation
+        averageDisplay.style.animation = 'popIn 0.5s ease forwards';
+        
+        // Update grade description based on average
+        if (average >= 90) {
+          gradeDescription.textContent = "Excellent! You're doing amazing!";
+          gradeDescription.style.color = "#2ecc71";
+        } else if (average >= 80) {
+          gradeDescription.textContent = "Good standing! Keep up the good work.";
+          gradeDescription.style.color = "#3498db";
+        } else if (average >= 75) {
+          gradeDescription.textContent = "Passing grade. Room for improvement.";
+          gradeDescription.style.color = "#f39c12";
+        } else {
+          gradeDescription.textContent = "Needs improvement. Don't give up!";
+          gradeDescription.style.color = "#e74c3c";
+        }
+        
+        // Add success particle effect
+        createSuccessEffect();
+      } else {
+        hideAverageResult();
+        gradeDescription.textContent = "Please enter valid grades (0 to 100)";
+        gradeDescription.style.color = "#666";
+      }
+      
+      updateSubjectCount();
+    }
+
+    // Add new subject button
+    addSubjectBtn.addEventListener('click', function() {
+      addSubjectRow();
+      
+      // Hide average result if it was shown
+      if (averageCalculated) {
+        hideAverageResult();
+        gradeDescription.textContent = "New subject added. Click 'CALCULATE' to update your result";
+      }
+      
+      // Add click animation
+      this.style.transform = 'translateY(2px)';
+      this.style.boxShadow = '0 0 0 3px black, 2px 2px 0 black';
+      
+      setTimeout(() => {
+        this.style.transform = '';
+        this.style.boxShadow = '';
+      }, 200);
+    });
+
+    // Calculate button - NOW THE ONLY WAY TO SEE AVERAGE
+    calculateBtn.addEventListener('click', function() {
+      calculateAverage();
+      
+      // Add click animation
+      this.style.transform = 'translateY(2px)';
+      this.style.boxShadow = '0 0 0 3px black, 2px 2px 0 black';
+      
+      setTimeout(() => {
+        this.style.transform = '';
+        this.style.boxShadow = '';
+      }, 200);
+    });
+
+    // Back to choose level page
+    backToChooseBtn.addEventListener('click', function() {
+      // Add click animation
+      this.style.transform = 'translateY(2px)';
+      this.style.boxShadow = '0 0 0 3px black, 2px 2px 0 black';
+      
+      setTimeout(() => {
+        this.style.transform = '';
+        this.style.boxShadow = '';
+        
+        // Navigate back
+        window.location.href = 'choose.html';
+      }, 200);
+    });
+
+    // Create success particle effect
+    function createSuccessEffect() {
+      const resultsArea = document.querySelector('.results-area');
+      const rect = resultsArea.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      
+      for (let i = 0; i < 15; i++) {
+        setTimeout(() => {
+          createParticle(centerX, centerY, 'success');
+        }, i * 50);
+      }
+    }
+
+    // Create delete particle effect
+    function createDeleteEffect(deleteBtn) {
+      const rect = deleteBtn.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      
+      for (let i = 0; i < 8; i++) {
+        setTimeout(() => {
+          createParticle(centerX, centerY, 'delete');
+        }, i * 30);
+      }
+    }
+
+    // Particle Effect System
+    const canvas = document.getElementById("particleCanvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particles = [];
+
+    function createParticle(x, y, auto = false, type = 'default') {
+      const shapes = ["heart", "circle", "glitter"];
+      const shape = type === 'success' ? 'heart' : 
+                   type === 'delete' ? 'circle' : 
+                   shapes[Math.floor(Math.random() * shapes.length)];
+      
+      const isBlueMode = body.classList.contains('blue-mode');
+      let color, size;
+      
+      if (type === 'success') {
+        color = isBlueMode ? "#4a8cff" : "#ff1493";
+        size = Math.random() * 10 + 8;
+      } else if (type === 'delete') {
+        color = "#ff4444";
+        size = Math.random() * 6 + 4;
+      } else {
+        if (shape === "heart") {
+          color = isBlueMode ? "blue" : "pink";
+        } else if (shape === "glitter") {
+          color = "white";
+        } else {
+          color = isBlueMode ? "lightblue" : "hotpink";
+        }
+        size = shape === "glitter" ? Math.random() * 4 + 2 : Math.random() * 12 + 8;
+      }
+      
+      particles.push({
+        x: x,
+        y: y,
+        size: size,
+        speedX: auto ? (Math.random() - 0.5) * 0.5 : (Math.random() - 0.5) * 2,
+        speedY: auto ? (Math.random() * -1 - 0.2) : (Math.random() - 1.5) * 2,
+        opacity: 1,
+        shape: shape,
+        color: color
+      });
+    }
+
+    function drawHeart(x, y, size, color, opacity) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.scale(size / 100, size / 100);
+      ctx.beginPath();
+      ctx.moveTo(75, 40);
+      ctx.bezierCurveTo(75, 37, 70, 25, 50, 25);
+      ctx.bezierCurveTo(20, 25, 20, 62.5, 20, 62.5);
+      ctx.bezierCurveTo(20, 80, 40, 102, 75, 120);
+      ctx.bezierCurveTo(110, 102, 130, 80, 130, 62.5);
+      ctx.bezierCurveTo(130, 62.5, 130, 25, 100, 25);
+      ctx.bezierCurveTo(85, 25, 75, 37, 75, 40);
+      ctx.closePath();
+      
+      if (color === "pink") {
+        ctx.fillStyle = `rgba(255,182,193, ${opacity})`;
+      } else if (color === "blue") {
+        ctx.fillStyle = `rgba(100, 180, 255, ${opacity})`;
+      } else if (color === "lightblue") {
+        ctx.fillStyle = `rgba(173, 216, 230, ${opacity})`;
+      } else if (color === "#ff1493") {
+        ctx.fillStyle = `rgba(255,20,147, ${opacity})`;
+      } else if (color === "#4a8cff") {
+        ctx.fillStyle = `rgba(74,140,255, ${opacity})`;
+      } else if (color === "#ff4444") {
+        ctx.fillStyle = `rgba(255,68,68, ${opacity})`;
+      } else {
+        ctx.fillStyle = `rgba(255,105,180, ${opacity})`;
+      }
+      
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < particles.length; i++) {
+        let p = particles[i];
+        p.x += p.speedX;
+        p.y += p.speedY;
+        p.opacity -= 0.01;
+
+        if (p.shape === "heart") {
+          drawHeart(p.x, p.y, p.size, p.color, p.opacity);
+        } else if (p.shape === "circle") {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size / 2, 0, Math.PI * 2);
+          
+          if (p.color === "pink") {
+            ctx.fillStyle = `rgba(255,182,193, ${p.opacity})`;
+          } else if (p.color === "blue") {
+            ctx.fillStyle = `rgba(100, 180, 255, ${p.opacity})`;
+          } else if (p.color === "lightblue") {
+            ctx.fillStyle = `rgba(173, 216, 230, ${p.opacity})`;
+          } else if (p.color === "#ff1493") {
+            ctx.fillStyle = `rgba(255,20,147, ${p.opacity})`;
+          } else if (p.color === "#4a8cff") {
+            ctx.fillStyle = `rgba(74,140,255, ${p.opacity})`;
+          } else if (p.color === "#ff4444") {
+            ctx.fillStyle = `rgba(255,68,68, ${p.opacity})`;
+          } else if (p.color === "white") {
+            ctx.fillStyle = `rgba(255,255,255,${p.opacity})`;
+          } else {
+            ctx.fillStyle = `rgba(255,105,180, ${p.opacity})`;
+          }
+          
+          ctx.fill();
+        } else if (p.shape === "glitter") {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size / 2, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255,255,255,${p.opacity})`;
+          ctx.fill();
+        }
+
+        if (p.opacity <= 0) {
+          particles.splice(i, 1);
+          i--;
+        }
+      }
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    // Auto glitter sprinkle generator
+    setInterval(() => {
+      createParticle(Math.random() * canvas.width, Math.random() * canvas.height, true);
+    }, 150);
+
+    // Mobile touch events for particles
+    let touchTimer;
+    window.addEventListener("touchstart", (e) => {
+      const touch = e.touches[0];
+      for (let i = 0; i < 5; i++) {
+        createParticle(touch.clientX, touch.clientY);
+      }
+      
+      // Long touch for more particles
+      touchTimer = setTimeout(() => {
+        for (let i = 0; i < 15; i++) {
+          createParticle(touch.clientX, touch.clientY);
+        }
+      }, 500);
+    });
+
+    window.addEventListener("touchend", () => {
+      clearTimeout(touchTimer);
+    });
+
+    window.addEventListener("touchmove", (e) => {
+      const touch = e.touches[0];
+      for (let i = 0; i < 2; i++) {
+        createParticle(touch.clientX, touch.clientY);
+      }
+    });
+
+    // Mouse events for desktop
+    window.addEventListener("mousemove", (e) => {
+      for (let i = 0; i < 3; i++) {
+        createParticle(e.clientX, e.clientY);
+      }
+    });
+
+    window.addEventListener("click", (e) => {
+      for (let i = 0; i < 10; i++) {
+        createParticle(e.clientX, e.clientY);
+      }
+    });
+
+    window.addEventListener("resize", () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  </script>
+</body>
+</html>
